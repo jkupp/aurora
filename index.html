@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aurora Borealis: A Beautiful Mystery in the Sky</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ================================================================
+       RESET & BASE
+    ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #020215;
+      color: #e8eeff;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    button { font-family: inherit; cursor: pointer; }
+
+    em { font-style: normal; }
+
+    /* ================================================================
+       DESIGN TOKENS
+    ================================================================ */
+    :root {
+      --space-dark:   #020215;
+      --space-mid:    #08082a;
+      --space-deep:   #0c0c35;
+
+      --text-bright:   #ffffff;
+      --text-primary:  #e8eeff;
+      --text-secondary:#9ba8cc;
+
+      --green:  #50ff8c;
+      --teal:   #00dcd2;
+      --purple: #a050ff;
+      --red:    #ff503c;
+      --gold:   #ffc040;
+
+      --t-slow: 1.2s ease;
+      --t-med:  0.6s ease;
+      --t-fast: 0.25s ease;
+    }
+
+    /* ================================================================
+       STAR FIELD
+    ================================================================ */
+    .stars {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(1px 1px at  8% 12%, #fff          0%, transparent 100%),
+        radial-gradient(1px 1px at 22% 68%, rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 37%  5%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 51% 44%, rgba(255,255,255,.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 63% 82%, rgba(255,255,255,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 74% 28%, rgba(255,255,255,.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 55%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 15%, rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 16% 90%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 44% 77%, rgba(255,255,255,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 57% 33%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 29% 50%, rgba(255,255,255,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 78% 88%, rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at  5% 40%, rgba(255,255,255,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 68% 62%, rgba(255,255,255,.6) 0%, transparent 100%),
+        #020215;
+    }
+
+    /* ================================================================
+       AURORA CSS ANIMATIONS
+       These serve as placeholder backgrounds wherever real photos/video
+       haven't been placed yet. Each color variant is defined below.
+    ================================================================ */
+    .aurora-bg {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+
+    .a-wave {
+      position: absolute;
+      width: 200%; height: 70%;
+      left: -50%;
+      border-radius: 50%;
+      filter: blur(48px);
+      animation: a-drift 18s ease-in-out infinite alternate;
+    }
+
+    /* Default (green) aurora */
+    .a-wave:nth-child(1) {
+      top: 15%;
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(50,255,130,.55), transparent);
+      animation-duration: 17s; animation-delay: 0s;
+    }
+    .a-wave:nth-child(2) {
+      top: 28%;
+      background: radial-gradient(ellipse 65% 40% at 35% 55%, rgba(0,220,180,.35), transparent);
+      animation-duration: 22s; animation-delay: -6s;
+    }
+    .a-wave:nth-child(3) {
+      top: 10%;
+      background: radial-gradient(ellipse 55% 35% at 65% 45%, rgba(100,60,240,.2), transparent);
+      animation-duration: 27s; animation-delay: -11s;
+    }
+
+    /* Red aurora (oxygen, ~200 km+) */
+    .aurora-red .a-wave:nth-child(1) {
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,70,50,.55), transparent);
+    }
+    .aurora-red .a-wave:nth-child(2) {
+      background: radial-gradient(ellipse 65% 40% at 35% 55%, rgba(200,30,70,.4), transparent);
+    }
+    .aurora-red .a-wave:nth-child(3) {
+      background: radial-gradient(ellipse 55% 35% at 65% 45%, rgba(255,110,50,.3), transparent);
+    }
+
+    /* Blue-purple aurora (nitrogen) */
+    .aurora-purple .a-wave:nth-child(1) {
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(130,55,255,.55), transparent);
+    }
+    .aurora-purple .a-wave:nth-child(2) {
+      background: radial-gradient(ellipse 65% 40% at 35% 55%, rgba(55,90,255,.4), transparent);
+    }
+    .aurora-purple .a-wave:nth-child(3) {
+      background: radial-gradient(ellipse 55% 35% at 65% 45%, rgba(175,70,195,.35), transparent);
+    }
+
+    /* Solar / warm (used for Section 2 stub) */
+    .aurora-solar .a-wave:nth-child(1) {
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,150,25,.35), transparent);
+    }
+    .aurora-solar .a-wave:nth-child(2) {
+      background: radial-gradient(ellipse 65% 40% at 35% 55%, rgba(255,90,15,.25), transparent);
+    }
+
+    /* Blue (used for Section 3 stub) */
+    .aurora-blue .a-wave:nth-child(1) {
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, rgba(25,90,255,.3), transparent);
+    }
+    .aurora-blue .a-wave:nth-child(2) {
+      background: radial-gradient(ellipse 65% 40% at 35% 55%, rgba(50,50,200,.22), transparent);
+    }
+
+    @keyframes a-drift {
+      0%   { transform: translateX(  0%) translateY(  0%) skewX(  0deg) scaleY(1.00); opacity:.75; }
+      25%  { transform: translateX( 3%) translateY(-5%) skewX( 5deg) scaleY(1.15); opacity:1;    }
+      50%  { transform: translateX(-4%) translateY( 3%) skewX(-6deg) scaleY(0.85); opacity:.80;  }
+      75%  { transform: translateX( 5%) translateY(-2%) skewX( 4deg) scaleY(1.10); opacity:.90;  }
+      100% { transform: translateX(-2%) translateY( 6%) skewX(-3deg) scaleY(1.05); opacity:.72;  }
+    }
+
+    /* Soft dark vignette for all photo/video scenes */
+    .vignette {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(2,2,21,.75) 100%);
+    }
+
+    .dim-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background: rgba(2,2,21,.42);
+    }
+
+    /* ================================================================
+       SCENE SYSTEM
+    ================================================================ */
+    .scene {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--t-slow);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scene.active  { opacity: 1; pointer-events: all; z-index: 10; }
+    .scene.leaving { opacity: 0; z-index: 9; }
+
+    /* Video backgrounds */
+    .scene-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: .4;
+    }
+
+    /* ================================================================
+       NAVIGATION OVERLAY
+    ================================================================ */
+    #nav-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      z-index: 200;
+      transition: opacity var(--t-med);
+    }
+
+    #nav-bar.hidden { opacity: 0; pointer-events: none; }
+
+    .nav-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(2,2,21,.65);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.75);
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--t-fast);
+    }
+    .nav-btn:hover {
+      border-color: rgba(80,255,140,.6);
+      color: var(--green);
+      transform: scale(1.1);
+    }
+    .nav-btn:disabled { opacity: 0; pointer-events: none; }
+
+    #progress-wrap { flex: 1; max-width: 380px; margin: 0 20px; }
+
+    #section-dots {
+      display: flex; gap: 8px; justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .s-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      cursor: pointer;
+      transition: all var(--t-fast);
+      position: relative;
+    }
+    .s-dot::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: 14px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px; white-space: nowrap;
+      color: rgba(255,255,255,.5);
+      opacity: 0;
+      transition: opacity var(--t-fast);
+      pointer-events: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-dot:hover::after { opacity: 1; }
+    .s-dot.active { background: var(--green); transform: scale(1.5); }
+    .s-dot.done   { background: rgba(80,255,140,.4); }
+
+    #progress-bar {
+      height: 2px;
+      background: rgba(255,255,255,.1);
+      border-radius: 2px;
+    }
+    #progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--teal));
+      border-radius: 2px;
+      transition: width .5s ease;
+      width: 0%;
+    }
+
+    /* Section label — top left */
+    #scene-label {
+      position: fixed; top: 24px; left: 32px;
+      z-index: 200;
+      font-family: 'Cinzel', serif;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      transition: opacity var(--t-med);
+    }
+
+    /* ================================================================
+       MUTE TOGGLE — top right
+    ================================================================ */
+    #mute-btn {
+      position: fixed; top: 20px; right: 28px;
+      z-index: 300;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(2,2,21,.65);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.6);
+      font-size: 16px;
+      display: none;         /* shown after begin */
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all var(--t-fast);
+    }
+    #mute-btn.visible { display: flex; }
+    #mute-btn:hover { border-color: rgba(80,255,140,.5); color: var(--green); }
+
+    /* ================================================================
+       SCENE 0 — BEGIN BUTTON
+    ================================================================ */
+    .begin-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      font-weight: 700;
+      letter-spacing: .15em;
+      color: var(--text-bright);
+      text-align: center;
+      text-shadow: 0 0 60px rgba(80,255,140,.35), 0 0 120px rgba(80,255,140,.15);
+      margin-bottom: 14px;
+      position: relative; z-index: 2;
+    }
+
+    .begin-sub {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(.85rem, 1.6vw, 1.15rem);
+      font-weight: 400;
+      letter-spacing: .28em;
+      color: rgba(255,255,255,.45);
+      text-align: center;
+      margin-bottom: 56px;
+      position: relative; z-index: 2;
+    }
+
+    .begin-btn {
+      font-family: 'Cinzel', serif;
+      font-size: .88rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: none;
+      border: 1px solid rgba(80,255,140,.45);
+      padding: 14px 44px;
+      border-radius: 4px;
+      position: relative; z-index: 2;
+      cursor: pointer;
+      transition: all var(--t-fast);
+      animation: pulse-cue 2.6s ease-in-out 1.4s infinite;
+    }
+    .begin-btn:hover {
+      background: rgba(80,255,140,.1);
+      border-color: var(--green);
+      animation: none;
+      opacity: 1;
+    }
+
+    @keyframes pulse-cue {
+      0%, 100% { opacity: .45; }
+      50%       { opacity: 1;   }
+    }
+
+    /* ================================================================
+       SCENE 1 — OPENING SLIDESHOW
+    ================================================================ */
+    #scene-1 { background: #000; }
+
+    /* Right-align the Continue button */
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+    }
+    .slide.active { opacity: 1; }
+
+    .slide img, .slide video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      animation: ken-burns 11s ease-in-out forwards;
+    }
+
+    @keyframes ken-burns {
+      from { transform: scale(1)    translate(0%,    0%); }
+      to   { transform: scale(1.07) translate(-1.5%, -.8%); }
+    }
+
+    /* Re-trigger Ken Burns when a new slide activates */
+    .slide img.kb-reset, .slide video.kb-reset {
+      animation: none;
+    }
+
+    .slide::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 35%, rgba(2,2,21,.65) 100%);
+      pointer-events: none;
+    }
+
+    #slideshow-footer {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 180px;
+      background: linear-gradient(transparent, rgba(2,2,21,.92));
+      z-index: 5;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 0 48px 28px;
+    }
+
+    #btn-ss-continue {
+      font-family: 'Cinzel', serif;
+      font-size: .82rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: none;
+      border: 1px solid rgba(80,255,140,.38);
+      padding: 11px 28px;
+      border-radius: 4px;
+      transition: all var(--t-fast);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .6s ease, background var(--t-fast), border-color var(--t-fast);
+    }
+    #btn-ss-continue.visible { opacity: 1; pointer-events: all; }
+    #btn-ss-continue:hover {
+      background: rgba(80,255,140,.1);
+      border-color: var(--green);
+    }
+
+    /* ================================================================
+       SCENE 2 — TITLE CARD
+    ================================================================ */
+    .title-overline {
+      font-family: 'Inter', sans-serif;
+      font-size: .72rem;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 22px;
+      position: relative; z-index: 2;
+    }
+
+    .title-headline {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.4rem, 5.5vw, 5rem);
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--text-bright);
+      text-align: center;
+      text-shadow: 0 0 80px rgba(0,220,210,.28);
+      margin-bottom: 22px;
+      position: relative; z-index: 2;
+    }
+
+    /* Pulsing right-arrow on title card — draws attention to nav once */
+    #btn-next.pulse-hint {
+      animation: arrow-pulse 1s ease-in-out 3;
+    }
+    @keyframes arrow-pulse {
+      0%, 100% { transform: scale(1);    border-color: rgba(255,255,255,.18); color: rgba(255,255,255,.75); }
+      50%       { transform: scale(1.25); border-color: rgba(80,255,140,.8);  color: var(--green); }
+    }
+
+    /* ================================================================
+       SCENE 3 — THE HOOK
+    ================================================================ */
+    .hook-quote {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.25rem, 2.4vw, 1.95rem);
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--text-primary);
+      letter-spacing: .025em;
+      text-align: center;
+      max-width: 760px;
+      padding: 0 36px;
+      position: relative; z-index: 2;
+      animation: scene-fadein 1.6s ease .4s both;
+    }
+
+    .hook-quote em { color: var(--green); }
+
+    /* ================================================================
+       SECTION INTRO CARD (generic, used for S1 intro + stubs)
+    ================================================================ */
+    .section-card {
+      text-align: center;
+      max-width: 820px;
+      padding: 0 40px;
+      position: relative; z-index: 2;
+      animation: scene-fadein 1s ease .25s both;
+    }
+
+    .section-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .38em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+
+    .section-headline {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 4.5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--text-bright);
+      margin-bottom: 18px;
+    }
+
+    .section-body {
+      font-size: clamp(1rem, 1.7vw, 1.25rem);
+      color: var(--text-secondary);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    .stub-tag {
+      display: inline-block;
+      margin-top: 38px;
+      font-family: 'Inter', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.25);
+      border: 1px solid rgba(255,255,255,.1);
+      padding: 4px 14px;
+      border-radius: 100px;
+    }
+
+    /* ================================================================
+       SCENE 5 — AURORA GALLERY (three-panel)
+    ================================================================ */
+    #scene-12 { flex-direction: row; align-items: stretch; }
+
+    .aurora-panel {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 72px;
+      transition: flex .45s ease;
+    }
+    .aurora-panel:hover { flex: 1.35; }
+
+    .panel-divider {
+      width: 1px; flex-shrink: 0;
+      background: rgba(255,255,255,.07);
+      z-index: 5;
+    }
+
+    .panel-label {
+      position: relative; z-index: 3;
+      text-align: center;
+    }
+
+    .panel-color-name {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.1rem, 2vw, 1.65rem);
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+
+    .panel-gas {
+      font-size: .88rem;
+      color: var(--text-secondary);
+    }
+
+    .panel-altitude {
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+    .alt-green  { color: var(--green);  }
+    .alt-red    { color: var(--red);    }
+    .alt-purple { color: var(--purple); }
+
+    /* Bottom gradient for legibility */
+    .aurora-panel::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 45%;
+      background: linear-gradient(transparent, rgba(2,2,21,.88));
+      z-index: 2; pointer-events: none;
+    }
+
+    .gallery-header {
+      position: absolute;
+      top: 40px; left: 0; right: 0;
+      text-align: center;
+      z-index: 20;
+    }
+    .gallery-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(.95rem, 1.7vw, 1.35rem);
+      font-weight: 400;
+      letter-spacing: .1em;
+      color: rgba(255,255,255,.65);
+    }
+
+    /* ================================================================
+       SCENE 6 — THREE QUESTIONS
+    ================================================================ */
+    .questions-wrap {
+      position: relative; z-index: 2;
+      max-width: 820px;
+      padding: 0 40px;
+      text-align: center;
+    }
+
+    .questions-lead {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: .06em;
+      margin-bottom: 44px;
+    }
+
+    .question-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+
+    .q-item {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.05rem, 1.9vw, 1.5rem);
+      color: var(--text-bright);
+      line-height: 1.42;
+      padding: 18px 26px;
+      text-align: left;
+      border-left: 2px solid transparent;
+      opacity: 0;
+      transform: translateX(-18px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .q-item.show { opacity: 1; transform: translateX(0); }
+    .q-item:nth-child(1) { border-color: var(--green);  }
+    .q-item:nth-child(2) { border-color: var(--teal);   }
+    .q-item:nth-child(3) { border-color: var(--purple); }
+
+    /* ================================================================
+       SCENE 7 — AURORAL OVAL MAP
+    ================================================================ */
+    .oval-wrap {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 22px;
+      padding: 0 20px;
+      width: 100%; max-width: 860px;
+      animation: scene-fadein .9s ease .2s both;
+    }
+
+    .oval-wrap h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: .08em;
+      text-align: center;
+    }
+
+    #oval-map { width: 100%; max-width: 760px; height: auto; }
+
+    .oval-caption {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.65;
+      text-align: center;
+    }
+    .oval-caption strong { color: var(--text-primary); }
+
+    /* ================================================================
+       SCENE 8 — PRE-ASSESSMENT POLL
+    ================================================================ */
+    .poll-wrap {
+      position: relative; z-index: 2;
+      max-width: 780px; width: 100%;
+      padding: 0 32px;
+      text-align: center;
+      animation: scene-fadein .9s ease .15s both;
+    }
+
+    .poll-wrap h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+
+    .poll-instruction {
+      font-size: .9rem;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .poll-options {
+      display: flex; flex-wrap: wrap;
+      gap: 10px; justify-content: center;
+      margin-bottom: 26px;
+    }
+
+    .p-opt {
+      padding: 9px 20px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 100px;
+      font-size: .88rem;
+      color: var(--text-primary);
+      background: rgba(255,255,255,.04);
+      cursor: pointer;
+      user-select: none;
+      transition: all var(--t-fast);
+    }
+    .p-opt:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
+    .p-opt.chosen  { background: rgba(80,255,140,.12); border-color: var(--green); color: var(--green); }
+    .p-opt.correct { background: rgba(80,255,140,.14); border-color: var(--green); color: var(--green); }
+    .p-opt.myth    { background: rgba(255,80,60,.1); border-color: rgba(255,80,60,.45); color: rgba(255,80,60,.7); text-decoration: line-through; }
+    .p-opt.special { background: rgba(0,220,210,.12); border-color: var(--teal); color: var(--teal); }
+
+    .poll-btn {
+      font-family: 'Cinzel', serif;
+      font-size: .82rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: none;
+      border: 1px solid rgba(80,255,140,.38);
+      padding: 11px 32px;
+      border-radius: 4px;
+      transition: all var(--t-fast);
+      margin-bottom: 22px;
+    }
+    .poll-btn:hover { background: rgba(80,255,140,.1); border-color: var(--green); }
+    .poll-btn:disabled { opacity: .3; pointer-events: none; }
+
+    #poll-feedback { display: none; text-align: left; max-width: 640px; margin: 0 auto; }
+
+    .p-result {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-bottom: 10px;
+      font-size: .85rem; line-height: 1.55;
+    }
+    .p-icon { flex-shrink: 0; font-size: 1rem; }
+    .p-text { color: var(--text-secondary); }
+    .p-text strong { color: var(--text-primary); }
+
+    /* ================================================================
+       KEYFRAME UTILITIES
+    ================================================================ */
+    @keyframes scene-fadein {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    @keyframes reveal-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ====================================================
+     AUDIO — starts on user click (browser autoplay policy)
+==================================================== -->
+<audio id="bg-audio" loop preload="none">
+  <source src="assets/audio/playstarz_music-space-ambient-435262.mp3" type="audio/mpeg">
+</audio>
+
+
+<!-- ====================================================
+     MUTE TOGGLE
+==================================================== -->
+<button id="mute-btn" aria-label="Toggle sound">🔊</button>
+
+<!-- ====================================================
+     NAV BAR (hidden on intro scenes)
+==================================================== -->
+<div id="nav-bar" class="hidden">
+  <button class="nav-btn" id="btn-prev" aria-label="Previous" disabled>&#8592;</button>
+  <div id="progress-wrap">
+    <div id="section-dots">
+      <div class="s-dot" data-target="5"  data-label="Our Restless Sun"></div>
+      <div class="s-dot" data-target="7"  data-label="Earth's Armor"></div>
+      <div class="s-dot" data-target="10" data-label="Why These Colors?"></div>
+      <div class="s-dot" data-target="13" data-label="The Rhythm"></div>
+      <div class="s-dot" data-target="15" data-label="The Chase"></div>
+    </div>
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+  </div>
+  <button class="nav-btn" id="btn-next" aria-label="Next">&#8594;</button>
+</div>
+
+<!-- Part label top-left -->
+<div id="scene-label"></div>
+
+
+<!-- ====================================================
+     SCENE 0 — BEGIN
+==================================================== -->
+<section class="scene active" id="scene-0" role="main" aria-label="Welcome screen">
+  <div class="stars"></div>
+  <div class="aurora-bg">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="begin-title">AURORA BOREALIS</div>
+  <div class="begin-sub">A Beautiful Mystery in the Sky</div>
+  <button class="begin-btn" id="btn-begin">Begin</button>
+</section>
+
+
+<!-- ====================================================
+     SCENE 1 — OPENING SLIDESHOW
+     Six still images + one video, crossfading in sequence.
+     ASSET NOTES:
+       · Add/remove <div class="slide"> blocks as your library grows
+       · Portrait video (11925565) works best in a single-image scene, not here
+       · The video slide auto-plays silently; the full audio track runs separately
+==================================================== -->
+<section class="scene" id="scene-1">
+
+  <div class="slide active">
+    <img src="assets/images/pexels-evelin-34540965.jpg" alt="Aurora borealis">
+  </div>
+  <div class="slide">
+    <img src="assets/images/pexels-sandyco-24264264.jpg" alt="Aurora over landscape">
+  </div>
+  <div class="slide">
+    <img src="assets/images/GSFC_20171208_Archive_e000760~orig.jpg" alt="Aurora borealis, NASA archive">
+  </div>
+  <div class="slide">
+    <img src="assets/images/pexels-funky-fresh-traveles-1357219379-26646276.jpg" alt="Aurora curtains in night sky">
+  </div>
+  <div class="slide">
+    <img src="assets/images/GSFC_20171208_Archive_e001655~orig.jpg" alt="Aurora from above, NASA archive">
+  </div>
+  <div class="slide">
+    <!-- VIDEO SLIDE — swap for your best timelapse once reviewed -->
+    <video src="assets/video/12225760_1920_1080_30fps.mp4" autoplay muted loop playsinline></video>
+  </div>
+
+  <div id="slideshow-footer">
+    <button id="btn-ss-continue" onclick="goTo(2)">Continue &nbsp;&#8594;</button>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     SCENE 2 — TITLE CARD
+     VIDEO BACKGROUND: 60fps clip for silky motion behind title.
+     SWAP: replace src below when you've reviewed your clips.
+==================================================== -->
+<section class="scene" id="scene-2">
+  <video class="scene-video" src="assets/video/12505178_1920_1080_60fps.mp4"
+         autoplay muted loop playsinline></video>
+  <div class="vignette"></div>
+  <div class="stars"></div>
+
+  <div style="position:relative;z-index:2;text-align:center;">
+    <div class="title-overline">Aurora Borealis</div>
+    <h1 class="title-headline">A Beautiful Mystery<br>in the Sky</h1>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     SCENE 3 — THE HOOK
+==================================================== -->
+<section class="scene" id="scene-3">
+  <div class="stars"></div>
+  <div class="aurora-bg">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+  <div class="dim-overlay"></div>
+
+  <p class="hook-quote">
+    For all of human existence, people have marveled in wonder at
+    <em>dancing lights in the sky.</em><br><br>
+    We now know a great deal about the aurora and why it occurs —
+    but <em>many beautiful mysteries remain.</em>
+  </p>
+</section>
+
+
+<!-- ====================================================
+     SCENE 4 — THREE QUESTIONS
+     Questions reveal in sequence on activation.
+==================================================== -->
+<section class="scene" id="scene-4">
+  <div class="stars"></div>
+  <div class="aurora-bg" style="opacity:.5;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="questions-wrap">
+    <ul class="question-list" id="q-list">
+      <li class="q-item">Where does the aurora's energy come from?</li>
+      <li class="q-item">Why does it appear only at the poles?</li>
+      <li class="q-item">Why is it so hard to predict — and what <em style="color:var(--purple)">can</em> you actually know?</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     SCENE 5 — PRE-ASSESSMENT POLL
+==================================================== -->
+<section class="scene" id="scene-5">
+  <div class="stars"></div>
+  <div class="aurora-bg" style="opacity:.3;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="poll-wrap">
+    <h2>Before we go further —</h2>
+    <p class="poll-instruction">
+      Which of these do you think affects where or when you see an aurora?
+      Select all that apply, then reveal the answers.
+    </p>
+
+    <div class="poll-options" id="poll-opts">
+      <div class="p-opt" data-ans="correct">Solar activity</div>
+      <div class="p-opt" data-ans="correct">Latitude</div>
+      <div class="p-opt" data-ans="correct">Earth's magnetic field</div>
+      <div class="p-opt" data-ans="correct">Cloud cover</div>
+      <div class="p-opt" data-ans="correct">Season (darkness)</div>
+      <div class="p-opt" data-ans="myth">Temperature</div>
+      <div class="p-opt" data-ans="correct">Light pollution</div>
+      <div class="p-opt" data-ans="myth">Moon phase</div>
+      <div class="p-opt" data-ans="special">Luck</div>
+    </div>
+
+    <button class="poll-btn" id="poll-submit" onclick="revealPoll()">Reveal Answers</button>
+
+    <div id="poll-feedback">
+      <div class="p-result">
+        <span class="p-icon">✓</span>
+        <span class="p-text">
+          <strong>Solar activity, latitude, Earth's magnetic field, cloud cover, season,
+          and light pollution</strong> all genuinely affect whether and where you see an aurora.
+        </span>
+      </div>
+      <div class="p-result">
+        <span class="p-icon" style="color:var(--red);">✗</span>
+        <span class="p-text">
+          <strong>Temperature</strong> has zero effect — the aurora happens 80–300 km
+          above any weather. Cold nights in Iceland are coincidental, not causal.
+        </span>
+      </div>
+      <div class="p-result">
+        <span class="p-icon" style="color:var(--red);">✗</span>
+        <span class="p-text">
+          <strong>Moon phase</strong> doesn't affect whether an aurora occurs — only
+          how easy it is to photograph. A full moon won't wash out a strong display.
+        </span>
+      </div>
+      <div class="p-result">
+        <span class="p-icon" style="color:var(--teal);">★</span>
+        <span class="p-text">
+          <strong>Luck</strong> — honestly? Yes. We'll explain why aurora forecasting
+          is genuinely hard, even with good data. But informed luck beats blind luck every time.
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     PART 1 — OUR RESTLESS SUN
+     VIDEO BG SUGGESTION: a slow solar surface timelapse would be stunning here.
+==================================================== -->
+<section class="scene" id="scene-6">
+  <div class="stars"></div>
+  <div class="aurora-bg aurora-solar">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+  <div class="dim-overlay"></div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 1</div>
+    <h2 class="section-headline">Our Restless Sun</h2>
+    <p class="section-body">
+      The Sun constantly streams charged particles into space — the solar wind.
+      But some days it erupts. A coronal mass ejection (CME) hurls a billion-ton
+      cloud of magnetized plasma toward Earth. That's when the sky comes alive.
+      And we're near solar maximum right now.
+    </p>
+    <div class="stub-tag">Content in development</div>
+  </div>
+</section>
+
+<section class="scene" id="scene-7">
+  <div class="stars"></div>
+  <div class="aurora-bg aurora-solar" style="opacity:.5;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 1 — Knowledge Check</div>
+    <h2 class="section-headline">Quiet Sun<br>or Stormy Sun?</h2>
+    <p class="section-body">
+      Drag solar events onto the right side of the timeline —
+      steady background wind versus dramatic eruptions.
+    </p>
+    <div class="stub-tag">Animated sorting activity — coming soon</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     PART 2 — THE SHIELD: EARTH'S INVISIBLE ARMOR
+     Includes auroral oval map (moved from old opening sequence).
+==================================================== -->
+<section class="scene" id="scene-8">
+  <div class="stars"></div>
+  <div class="aurora-bg aurora-blue">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+  <div class="dim-overlay"></div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 2</div>
+    <h2 class="section-headline">Earth's<br>Invisible Armor</h2>
+    <p class="section-body">
+      The magnetosphere deflects almost all the solar wind — like a vast invisible shield.
+      But at the poles, magnetic field lines converge and funnel inward.
+      Those are the entry points. Think of it like a neon sign:
+      electricity through gas makes colored light. Same physics.
+    </p>
+    <div class="stub-tag">Content in development &nbsp;·&nbsp; "Follow a particle" narrative coming</div>
+  </div>
+</section>
+
+<!-- Auroral oval map — moved here from opening, belongs with Earth's Armor -->
+<section class="scene" id="scene-9">
+  <div class="stars"></div>
+  <div class="aurora-bg aurora-blue" style="opacity:.35;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="oval-wrap">
+    <h2>The Aurora Doesn't Fall Randomly — It Follows an Oval</h2>
+
+    <svg id="oval-map" viewBox="0 0 800 430" xmlns="http://www.w3.org/2000/svg"
+         role="img" aria-label="World map showing the auroral oval over the northern hemisphere">
+      <rect width="800" height="430" fill="#04041a" rx="6"/>
+      <path d="M78,100 L58,132 L54,162 L68,192 L98,202 L128,222 L160,237 L174,252 L184,272
+               L196,256 L202,240 L212,220 L222,198 L216,174 L200,153 L184,138 L168,124
+               L153,110 L128,105 Z" fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M228,48 L208,60 L204,82 L215,102 L236,107 L258,96 L262,70 L250,53 Z"
+            fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M343,112 L336,122 L338,134 L350,138 L358,130 L358,118 L350,110 Z"
+            fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M376,62 L365,76 L368,94 L382,90 L393,76 L386,63 Z"
+            fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M302,76 L294,82 L296,92 L308,94 L318,88 L316,78 Z"
+            fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M358,92 L342,108 L338,128 L354,142 L376,147 L398,136 L402,114 L392,94 L374,88 Z"
+            fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M400,68 L388,86 L398,112 L420,122 L462,117 L512,112 L562,107 L602,96
+               L622,80 L602,64 L562,59 L512,57 L462,59 L422,64 Z"
+            fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M514,122 L492,148 L496,178 L522,192 L562,186 L592,170 L612,150
+               L596,130 L562,118 L526,114 Z" fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M360,162 L344,188 L347,222 L364,257 L385,272 L402,262 L412,236
+               L406,200 L396,172 L378,156 Z" fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M184,278 L168,298 L166,334 L178,368 L200,378 L216,362 L220,332
+               L215,298 L200,280 Z" fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <path d="M572,242 L556,262 L558,288 L576,302 L602,297 L617,276 L614,250
+               L596,238 Z" fill="#12122e" stroke="#1e1e4a" stroke-width=".8"/>
+      <line x1="0" y1="216" x2="800" y2="216" stroke="#1e1e44" stroke-width=".6" stroke-dasharray="5,7"/>
+      <text x="10" y="213" fill="#1e1e44" font-size="8.5" font-family="Inter, sans-serif">Equator</text>
+      <ellipse cx="408" cy="66" rx="197" ry="50" fill="rgba(80,255,140,.05)"
+               stroke="rgba(80,255,140,.2)" stroke-width="14">
+        <animate attributeName="rx" values="197;208;197" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="ry" values="50;54;50"    dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;.55;1" dur="4s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="408" cy="66" rx="197" ry="50" fill="none"
+               stroke="rgba(80,255,140,.75)" stroke-width="2.5" stroke-dasharray="8,4">
+        <animate attributeName="rx" values="197;208;197" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="ry" values="50;54;50"    dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-opacity" values=".75;1;.75" dur="4s" repeatCount="indefinite"/>
+      </ellipse>
+      <circle cx="392" cy="70" r="4" fill="rgba(255,255,255,.9)">
+        <animate attributeName="r" values="4;5.5;4" dur="3.2s" repeatCount="indefinite"/>
+      </circle>
+      <text x="400" y="65" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter, sans-serif">Tromsø</text>
+      <circle cx="306" cy="74" r="4" fill="rgba(255,255,255,.9)">
+        <animate attributeName="r" values="4;5.5;4" dur="3.7s" repeatCount="indefinite"/>
+      </circle>
+      <text x="314" y="69" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter, sans-serif">Reykjavík</text>
+      <circle cx="104" cy="80" r="4" fill="rgba(255,255,255,.9)">
+        <animate attributeName="r" values="4;5.5;4" dur="4.1s" repeatCount="indefinite"/>
+      </circle>
+      <text x="112" y="75" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter, sans-serif">Fairbanks</text>
+      <circle cx="163" cy="83" r="3.2" fill="rgba(200,200,255,.65)"/>
+      <text x="170" y="79" fill="rgba(200,200,255,.65)" font-size="9" font-family="Inter, sans-serif">Yellowknife</text>
+      <circle cx="152" cy="134" r="2.8" fill="rgba(160,160,220,.45)"/>
+      <text x="158" y="130" fill="rgba(160,160,220,.45)" font-size="9" font-family="Inter, sans-serif">Montana</text>
+      <circle cx="350" cy="118" r="2.8" fill="rgba(160,160,220,.45)"/>
+      <text x="356" y="114" fill="rgba(160,160,220,.45)" font-size="9" font-family="Inter, sans-serif">Scotland</text>
+      <circle cx="408" cy="16" r="2.5" fill="rgba(255,255,255,.4)"/>
+      <text x="408" y="10" fill="rgba(255,255,255,.35)" font-size="8.5" font-family="Inter, sans-serif" text-anchor="middle">North Pole</text>
+      <ellipse cx="408" cy="364" rx="156" ry="38" fill="rgba(80,255,140,.03)"
+               stroke="rgba(80,255,140,.3)" stroke-width="1.8" stroke-dasharray="6,6">
+        <animate attributeName="stroke-opacity" values=".3;.55;.3" dur="5s" repeatCount="indefinite"/>
+      </ellipse>
+      <rect x="636" y="392" width="156" height="30" rx="4"
+            fill="rgba(2,2,21,.75)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+      <line x1="646" y1="407" x2="668" y2="407"
+            stroke="rgba(80,255,140,.8)" stroke-width="2.5" stroke-dasharray="6,3"/>
+      <text x="674" y="411" fill="rgba(255,255,255,.55)" font-size="9.5" font-family="Inter, sans-serif">Auroral oval (typical)</text>
+    </svg>
+
+    <p class="oval-caption">
+      The aurora follows a ring called the <strong>auroral oval</strong>, centered
+      on Earth's magnetic pole — not the geographic North Pole.
+      Tromsø, Reykjavík, and Fairbanks all sit inside or near this ring.
+      Montana and Scotland sit well below it — which matters a great deal for forecasting.
+    </p>
+  </div>
+</section>
+
+<section class="scene" id="scene-10">
+  <div class="stars"></div>
+  <div class="aurora-bg aurora-blue" style="opacity:.5;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 2 — Knowledge Check</div>
+    <h2 class="section-headline">Where Can<br>They Enter?</h2>
+    <p class="section-body">
+      Tap the spots on this magnetosphere diagram where charged particles
+      can funnel into Earth's atmosphere.
+    </p>
+    <div class="stub-tag">Interactive tap diagram — coming soon</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     PART 3 — WHY THESE COLORS?
+     Includes color gallery (moved from old opening sequence).
+==================================================== -->
+<section class="scene" id="scene-11">
+  <div class="stars"></div>
+  <div class="aurora-bg">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 3</div>
+    <h2 class="section-headline">Why These<br>Colors?</h2>
+    <p class="section-body">
+      The aurora is a live readout of Earth's layered atmosphere.
+      Oxygen at 100 km glows green. Oxygen higher up glows red.
+      Nitrogen traces the lower edges in blue and purple.
+      Every color you see has an address in the sky.
+    </p>
+    <div class="stub-tag">Content in development &nbsp;·&nbsp; Photo annotation activity coming</div>
+  </div>
+</section>
+
+<!-- Color gallery — moved here from old opening sequence, belongs with Part 3 -->
+<section class="scene" id="scene-12" aria-label="Aurora color gallery">
+  <div class="gallery-header">
+    <h2>The Aurora Comes in Colors — Each Tells a Story</h2>
+  </div>
+
+  <!-- GREEN panel (Oxygen, ~100 km) -->
+  <div class="aurora-panel">
+    <div class="aurora-bg">
+      <div class="a-wave"></div>
+      <div class="a-wave"></div>
+      <div class="a-wave"></div>
+    </div>
+    <!-- ASSET PLACEHOLDER: <img src="assets/images/your-green-aurora.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6;"> -->
+    <div class="panel-label">
+      <div class="panel-color-name">Green</div>
+      <div class="panel-gas">Oxygen atoms</div>
+      <div class="panel-altitude alt-green">~100 km &nbsp;·&nbsp; Most common</div>
+    </div>
+  </div>
+
+  <div class="panel-divider"></div>
+
+  <!-- RED panel (Oxygen, 200 km+) -->
+  <div class="aurora-panel aurora-red">
+    <div class="aurora-bg">
+      <div class="a-wave"></div>
+      <div class="a-wave"></div>
+      <div class="a-wave"></div>
+    </div>
+    <!-- ASSET PLACEHOLDER: <img src="assets/images/your-red-aurora.jpg" ...> -->
+    <div class="panel-label">
+      <div class="panel-color-name">Red</div>
+      <div class="panel-gas">Oxygen atoms</div>
+      <div class="panel-altitude alt-red">200 km+ &nbsp;·&nbsp; Rare &nbsp;·&nbsp; High energy</div>
+    </div>
+  </div>
+
+  <div class="panel-divider"></div>
+
+  <!-- BLUE-PURPLE panel (Nitrogen) -->
+  <div class="aurora-panel aurora-purple">
+    <div class="aurora-bg">
+      <div class="a-wave"></div>
+      <div class="a-wave"></div>
+      <div class="a-wave"></div>
+    </div>
+    <!-- ASSET PLACEHOLDER: <img src="assets/images/your-purple-aurora.jpg" ...> -->
+    <div class="panel-label">
+      <div class="panel-color-name">Blue-Purple</div>
+      <div class="panel-gas">Nitrogen molecules</div>
+      <div class="panel-altitude alt-purple">~80–120 km &nbsp;·&nbsp; Lower edge</div>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="scene-13">
+  <div class="stars"></div>
+  <div class="aurora-bg" style="opacity:.6;">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 3 — Knowledge Check</div>
+    <h2 class="section-headline">Name That Color</h2>
+    <p class="section-body">
+      Drag the gas labels onto the color bands in a real aurora photograph.
+    </p>
+    <div class="stub-tag">Drag-and-drop annotation — coming soon</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     PART 4 — THE RHYTHM: THREE REASONS IT'S UNPREDICTABLE
+     ★ KEY PART — Kp misconception + substorm cycles + "The door is opening"
+==================================================== -->
+<section class="scene" id="scene-14">
+  <div class="stars"></div>
+  <!-- ASSET PLACEHOLDER: timelapse video background
+  <video class="scene-video" src="assets/video/13397609_1920_1080_15fps.mp4"
+         autoplay muted loop playsinline></video> -->
+  <div class="aurora-bg">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 4 &nbsp;★&nbsp; Key Part</div>
+    <h2 class="section-headline">The Rhythm</h2>
+    <p class="section-body">
+      Why is the aurora so hard to predict? Because three completely different
+      timescales govern it — and most people only know one.
+      Days. Hours. Minutes.
+      And a spike on a magnetometer means one thing above all else:
+      <em style="color:var(--green)">"The door is opening."</em>
+    </p>
+    <div class="stub-tag">Kp misconception + substorm cycles — content in development</div>
+  </div>
+</section>
+
+<section class="scene" id="scene-15">
+  <div class="stars"></div>
+  <div class="aurora-bg" style="opacity:.5;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 4 — Knowledge Check</div>
+    <h2 class="section-headline">True or False?</h2>
+    <p class="section-body">
+      Three rapid-fire scenarios — one misconception per timescale.<br><br>
+      <em style="color:var(--text-secondary);font-style:italic;">
+        "A Kp of 7 means an intense aurora over Iceland — true or false?"
+      </em>
+    </p>
+    <div class="stub-tag">True/false burst activity — coming soon</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     PART 5 — THE CHASE: WHERE YOU ARE CHANGES EVERYTHING
+==================================================== -->
+<section class="scene" id="scene-16">
+  <div class="stars"></div>
+  <!-- ASSET PLACEHOLDER: landscape foreground aurora image
+  <img style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.4;"
+       src="assets/images/your-landscape-aurora.jpg" alt=""> -->
+  <div class="aurora-bg">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+  <div class="dim-overlay"></div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 5</div>
+    <h2 class="section-headline">Where You Are<br>Changes Everything</h2>
+    <p class="section-body">
+      In Montana or Scotland, the Kp index tells you something real —
+      whether the oval has expanded far enough to reach you.
+      In Iceland or Norway, Kp is nearly irrelevant.
+      Watch the clouds, the Bz component of the solar wind, and the magnetometer.
+    </p>
+    <div class="stub-tag">Branching scenario activity — content in development</div>
+  </div>
+</section>
+
+<section class="scene" id="scene-17">
+  <div class="stars"></div>
+  <div class="aurora-bg" style="opacity:.5;">
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Part 5 — Knowledge Check</div>
+    <h2 class="section-headline">Plan Your Chase</h2>
+    <p class="section-body">
+      Choose your location and month.
+      Follow the branching path to your personalized night-of checklist.
+    </p>
+    <div class="stub-tag">Branching scenario — coming soon</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     FINAL ASSESSMENT — SPACE WEATHER FORECAST CHALLENGE
+==================================================== -->
+<section class="scene" id="scene-18">
+  <div class="stars"></div>
+  <div class="aurora-bg">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-eyebrow">Final Assessment</div>
+    <h2 class="section-headline">Space Weather<br>Forecast Challenge</h2>
+    <p class="section-body">
+      Four scenarios. A simulated space weather briefing for each.
+      You decide: do conditions favor an aurora tonight?
+      <br><br>
+      This is where everything comes together.
+    </p>
+    <div class="stub-tag">Four scenario-based reasoning tasks — coming soon</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
+     JAVASCRIPT
+==================================================== -->
+<script>
+  // ──────────────────────────────────────────────
+  // SCENE MANAGER
+  // ──────────────────────────────────────────────
+  const TOTAL = 19;   // scenes 0 – 18
+
+  // Which dot (0–4) each scene belongs to; null = no dot active
+  const SCENE_PART = [
+    null, null, null, null, null,  // 0-4  (opening + questions)
+    null,                          // 5    (poll — pre-content)
+    0, 0,                          // 6-7  (Part 1: The Sun)
+    1, 1, 1,                       // 8-10 (Part 2: Earth's Armor + oval)
+    2, 2, 2,                       // 11-13 (Part 3: Colors + gallery)
+    3, 3,                          // 14-15 (Part 4: The Rhythm)
+    4, 4,                          // 16-17 (Part 5: The Chase)
+    null                           // 18   (final)
+  ];
+
+  const PART_NAMES = [
+    'Part 1 — Our Restless Sun',
+    'Part 2 — Earth\'s Invisible Armor',
+    'Part 3 — Why These Colors?',
+    'Part 4 — The Rhythm',
+    'Part 5 — The Chase',
+  ];
+
+  let cur = 0;
+  let busy = false;
+
+  function el(id) { return document.getElementById(id); }
+
+  function goTo(n) {
+    if (busy || n === cur || n < 0 || n >= TOTAL) return;
+    busy = true;
+
+    const from = el('scene-' + cur);
+    const to   = el('scene-' + n);
+
+    from.classList.remove('active');
+    from.classList.add('leaving');
+    to.classList.add('active');
+
+    onSceneActivate(n);
+
+    setTimeout(() => { from.classList.remove('leaving'); busy = false; }, 1300);
+
+    cur = n;
+    refreshNav();
+  }
+
+  function next() { goTo(cur + 1); }
+  function prev() { goTo(cur - 1); }
+
+  function refreshNav() {
+    const nav     = el('nav-bar');
+    const btnPrev = el('btn-prev');
+    const btnNext = el('btn-next');
+    const label   = el('scene-label');
+    const mute    = el('mute-btn');
+
+    // Show/hide nav and mute button
+    const showNav = cur >= 2;
+    nav.classList.toggle('hidden', !showNav);
+    mute.classList.toggle('visible', cur >= 1);
+
+    btnPrev.disabled = cur <= 2;
+    btnNext.disabled = cur >= TOTAL - 1;
+
+    // Progress fill
+    el('progress-fill').style.width = (cur / (TOTAL - 1) * 100) + '%';
+
+    // Part dots
+    const part = SCENE_PART[cur];
+    document.querySelectorAll('.s-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === part);
+      d.classList.toggle('done',   part !== null && i < part);
+    });
+
+    // Part label top-left
+    if (part !== null) {
+      label.textContent = PART_NAMES[part];
+      label.style.opacity = '.5';
+    } else {
+      label.style.opacity = '0';
+    }
+  }
+
+  // ──────────────────────────────────────────────
+  // SCENE-SPECIFIC ACTIVATION HOOKS
+  // ──────────────────────────────────────────────
+  function onSceneActivate(n) {
+    if (n === 4) revealQuestions();
+    // Pulse the right arrow once on the title card
+    if (n === 2) {
+      setTimeout(() => {
+        const btn = el('btn-next');
+        btn.classList.add('pulse-hint');
+        btn.addEventListener('animationend', () => btn.classList.remove('pulse-hint'), { once: true });
+      }, 3200);
+    }
+  }
+
+  // ──────────────────────────────────────────────
+  // KEYBOARD + DOT NAVIGATION
+  // ──────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      cur === 0 ? beginExperience() : next();
+    }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  document.querySelectorAll('.s-dot').forEach(d => {
+    d.addEventListener('click', () => goTo(parseInt(d.dataset.target)));
+  });
+
+  el('btn-prev').addEventListener('click', prev);
+  el('btn-next').addEventListener('click', next);
+
+  // ──────────────────────────────────────────────
+  // SCENE 0 — BEGIN BUTTON
+  // ──────────────────────────────────────────────
+  el('btn-begin').addEventListener('click', beginExperience);
+
+  // Keep keyboard spacebar/enter working on scene 0 too
+  el('scene-0').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') beginExperience();
+  });
+
+  function beginExperience() {
+    if (cur !== 0) return;
+
+    const audio = el('bg-audio');
+    audio.volume = 0;
+    audio.play().catch(() => {});
+    const fade = setInterval(() => {
+      audio.volume = Math.min(audio.volume + 0.012, 0.28);
+      if (audio.volume >= 0.28) clearInterval(fade);
+    }, 80);
+
+    goTo(1);
+    setTimeout(startSlideshow, 1100);
+  }
+
+  // ──────────────────────────────────────────────
+  // MUTE TOGGLE
+  // ──────────────────────────────────────────────
+  let muted = false;
+  el('mute-btn').addEventListener('click', () => {
+    const audio = el('bg-audio');
+    muted = !muted;
+    audio.muted = muted;
+    el('mute-btn').textContent = muted ? '🔇' : '🔊';
+  });
+
+  // ──────────────────────────────────────────────
+  // SCENE 1 — SLIDESHOW
+  // ──────────────────────────────────────────────
+  const slides = document.querySelectorAll('.slide');
+  let slideIdx = 0;
+  const SLIDE_MS = 4600;
+
+  function startSlideshow() {
+    setInterval(advanceSlide, SLIDE_MS);
+  }
+
+  function advanceSlide() {
+    slides[slideIdx].classList.remove('active');
+    slideIdx = (slideIdx + 1) % slides.length;
+    slides[slideIdx].classList.add('active');
+
+    const media = slides[slideIdx].querySelector('img, video');
+    if (media) {
+      media.style.animation = 'none';
+      void media.offsetWidth;
+      media.style.animation = '';
+    }
+
+    if (slideIdx === slides.length - 1) {
+      el('btn-ss-continue').classList.add('visible');
+    }
+  }
+
+  setTimeout(() => {
+    if (cur === 1) el('btn-ss-continue').classList.add('visible');
+  }, SLIDE_MS * slides.length + 1200);
+
+  // ──────────────────────────────────────────────
+  // SCENE 4 — QUESTIONS REVEAL
+  // ──────────────────────────────────────────────
+  function revealQuestions() {
+    document.querySelectorAll('#q-list .q-item').forEach((item, i) => {
+      item.classList.remove('show');
+      setTimeout(() => item.classList.add('show'), 380 + i * 340);
+    });
+  }
+
+  // ──────────────────────────────────────────────
+  // SCENE 5 — POLL
+  // ──────────────────────────────────────────────
+  document.querySelectorAll('.p-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (!opt.classList.contains('revealed')) opt.classList.toggle('chosen');
+    });
+  });
+
+  function revealPoll() {
+    el('poll-submit').disabled = true;
+    document.querySelectorAll('.p-opt').forEach(opt => {
+      opt.classList.add('revealed');
+      opt.classList.remove('chosen');
+      const a = opt.dataset.ans;
+      if (a === 'correct') opt.classList.add('correct');
+      if (a === 'myth')    opt.classList.add('myth');
+      if (a === 'special') opt.classList.add('special');
+    });
+    const fb = el('poll-feedback');
+    fb.style.display = 'block';
+    fb.style.animation = 'reveal-up .55s ease both';
+  }
+
+  // ──────────────────────────────────────────────
+  // INIT
+  // ──────────────────────────────────────────────
+  refreshNav();
+</script>
+
+</body>
+</html>
