@@ -581,82 +581,6 @@
     }
 
     /* ================================================================
-       SCENE 5 — AURORA GALLERY (three-panel)
-    ================================================================ */
-    #scene-18 { flex-direction: row; align-items: stretch; }
-
-    .aurora-panel {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      padding-bottom: 72px;
-      transition: flex .45s ease;
-    }
-    .aurora-panel:hover { flex: 1.35; }
-
-    .panel-divider {
-      width: 1px; flex-shrink: 0;
-      background: rgba(255,255,255,.07);
-      z-index: 5;
-    }
-
-    .panel-label {
-      position: relative; z-index: 3;
-      text-align: center;
-    }
-
-    .panel-color-name {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(1.1rem, 2vw, 1.65rem);
-      font-weight: 600;
-      color: var(--text-bright);
-      margin-bottom: 6px;
-    }
-
-    .panel-gas {
-      font-size: .88rem;
-      color: var(--text-secondary);
-    }
-
-    .panel-altitude {
-      font-size: .72rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      margin-top: 5px;
-    }
-    .alt-green  { color: var(--green);  }
-    .alt-red    { color: var(--red);    }
-    .alt-purple { color: var(--purple); }
-
-    /* Bottom gradient for legibility */
-    .aurora-panel::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 45%;
-      background: linear-gradient(transparent, rgba(2,2,21,.88));
-      z-index: 2; pointer-events: none;
-    }
-
-    .gallery-header {
-      position: absolute;
-      top: 40px; left: 0; right: 0;
-      text-align: center;
-      z-index: 20;
-    }
-    .gallery-header h2 {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(.95rem, 1.7vw, 1.35rem);
-      font-weight: 400;
-      letter-spacing: .1em;
-      color: rgba(255,255,255,.65);
-    }
-
-    /* ================================================================
        SCENE 6 — THREE QUESTIONS
     ================================================================ */
     .questions-wrap {
@@ -1358,6 +1282,53 @@
     }
 
     /* ================================================================
+       FINAL ASSESSMENT (extends the True/False KC pattern with a briefing card)
+    ================================================================ */
+    .fa-scene {
+      position: relative; z-index: 2;
+      max-width: 760px; width: 100%;
+      padding: 0 36px; text-align: center;
+      animation: scene-fadein .9s ease .15s both;
+    }
+    .fa-q-wrap { min-height: 420px; }
+
+    .fa-location {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.2rem, 2.1vw, 1.55rem);
+      font-weight: 600; color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+    .fa-subtitle {
+      font-size: .88rem; color: var(--text-secondary);
+      font-style: italic; margin-bottom: 20px;
+    }
+
+    .fa-briefing {
+      text-align: left;
+      max-width: 480px; margin: 0 auto 24px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 6px 22px;
+    }
+    .fa-briefing-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 18px; padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .92rem;
+    }
+    .fa-briefing-row:last-child { border-bottom: none; }
+    .fa-briefing-label { color: var(--text-secondary); flex-shrink: 0; }
+    .fa-briefing-value { color: var(--text-primary); font-weight: 500; text-align: right; }
+
+    .fa-question {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.05rem, 1.85vw, 1.3rem);
+      font-weight: 400; color: var(--text-bright);
+      margin-bottom: 22px;
+    }
+
+    /* ================================================================
        KEYFRAME UTILITIES
     ================================================================ */
     @keyframes scene-fadein {
@@ -1809,30 +1780,8 @@
 </section>
 
 
-<!-- Scene 11: The neon sign analogy -->
+<!-- Scene 11: Follow a particle — Sun to Reykjavik -->
 <section class="scene" id="scene-11">
-  <div class="stars"></div>
-  <div class="aurora-bg aurora-blue" style="opacity:.4;">
-    <div class="a-wave"></div>
-  </div>
-  <div class="dim-overlay"></div>
-
-  <div class="sun-scene">
-    <div class="section-eyebrow">Part 2</div>
-    <h2 class="section-headline" style="margin-bottom:18px;">Think of a Neon Sign</h2>
-    <div class="sun-body">
-      <p>Electricity through gas makes colored light — that's all a neon sign is. <strong>Same physics.</strong> Just on a planetary scale: the Sun supplies the electricity, and Earth's atmosphere supplies the gas.</p>
-    </div>
-
-    <div class="neon-text-wrap">
-      <div class="neon-text">NEON</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- Scene 12: Follow a particle — Sun to Tromsø -->
-<section class="scene" id="scene-12">
   <div class="stars"></div>
   <div class="aurora-bg" style="opacity:.4;">
     <div class="a-wave"></div>
@@ -1843,44 +1792,53 @@
     <div class="section-eyebrow">Part 2</div>
     <h2 class="section-headline" style="margin-bottom:18px;">Follow a Particle</h2>
     <div class="sun-body">
-      <p>One charged particle leaves the Sun's surface, crosses millions of miles of solar wind, meets Earth's magnetosphere, funnels down at the pole, and collides with the atmosphere over Tromsø — where it glows.</p>
+      <p>One charged particle leaves the Sun's surface as part of the solar wind, riding it roughly 93 million miles to Earth.
+      When it reaches the magnetosphere it doesn't punch through — it gets caught by a field line and curves with it,
+      funneling down to the pole, where it collides with the atmosphere over Reykjavik and glows.</p>
     </div>
 
     <div class="cycle-chart">
-      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="-180 0 820 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="followSun" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"  stop-color="#fff1c8"/>
+            <stop offset="35%" stop-color="#ffa532" stop-opacity=".9"/>
+            <stop offset="60%" stop-color="#ff5f14" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#ff5f14" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- just a hint of the sun, peeking in from off-canvas left -->
+        <circle cx="-240" cy="150" r="170" fill="url(#followSun)"/>
+
         <use href="#magnetosphere-diagram"/>
 
-        <!-- journey path through the diagram -->
-        <path d="M20,150 L95,150 C125,135 145,122 165,120
-                 C200,117 235,116 260,115 L260,132"
+        <!-- journey path: sun → straight through space → curves with the OUTERMOST field line into the pole -->
+        <path d="M-100,150 L85,150 C85,78 260,52 260,130 L260,132"
               fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.8" stroke-dasharray="4,5"/>
 
-        <circle cx="20"  cy="150" r="6" fill="rgba(255,190,60,.9)"/>
-        <circle cx="95"  cy="150" r="5" fill="rgba(255,255,255,.85)"/>
-        <circle cx="165" cy="120" r="5" fill="rgba(120,170,255,.9)"/>
-        <circle cx="260" cy="115" r="5" fill="rgba(80,255,140,.9)"/>
-        <circle cx="260" cy="132" r="5" fill="rgba(80,255,140,.95)"/>
+        <circle cx="-100" cy="150" r="6" fill="rgba(255,225,150,.95)"/>
+        <circle cx="85"   cy="150" r="5" fill="rgba(255,255,255,.85)"/>
+        <circle cx="260"  cy="132" r="5" fill="rgba(80,255,140,.95)"/>
 
-        <!-- leader lines to spread out the bigger labels -->
+        <!-- distance label along the straight space crossing, clear of the field lines -->
+        <text x="-10" y="132" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="14" font-family="Inter,sans-serif">~93 million miles</text>
+
+        <!-- leader lines to spread out the labels -->
         <g stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="2,3">
-          <line x1="20"  y1="150" x2="20"  y2="205"/>
-          <line x1="95"  y1="150" x2="20"  y2="46"/>
-          <line x1="165" y1="120" x2="340" y2="46"/>
-          <line x1="260" y1="115" x2="340" y2="205"/>
-          <line x1="260" y1="132" x2="140" y2="263"/>
+          <line x1="-100" y1="150" x2="-100" y2="205"/>
+          <line x1="85"   y1="150" x2="95"   y2="205"/>
+          <line x1="260"  y1="132" x2="320"  y2="245"/>
         </g>
 
-        <text x="20"  y="216" fill="rgba(255,190,60,.95)"  font-size="16" font-weight="600" font-family="Inter,sans-serif">Leaves the Sun</text>
-        <text x="20"  y="36"  fill="rgba(255,255,255,.92)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Crosses the solar wind</text>
-        <text x="340" y="36"  fill="rgba(140,190,255,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Meets the magnetosphere</text>
-        <text x="340" y="216" fill="rgba(80,255,140,.95)"  font-size="16" font-weight="600" font-family="Inter,sans-serif">Funnels through the cusp</text>
-        <text x="130" y="273" fill="rgba(80,255,140,1)"    font-size="16" font-weight="600" font-family="Inter,sans-serif">Glows over Tromsø</text>
+        <text x="-100" y="216" fill="rgba(255,225,150,.95)"  font-size="16" font-weight="600" font-family="Inter,sans-serif">Leaves the Sun</text>
+        <text x="95"   y="220" fill="rgba(140,190,255,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Meets the magnetosphere</text>
+        <text x="325"  y="260" fill="rgba(80,255,140,1)"    font-size="16" font-weight="600" font-family="Inter,sans-serif">Glows over Reykjavik</text>
 
         <!-- the traveling particle -->
         <circle r="5" fill="#fff">
           <animateMotion dur="6s" repeatCount="indefinite"
-            path="M20,150 L95,150 C125,135 145,122 165,120
-                   C200,117 235,116 260,115 L260,132"/>
+            path="M-100,150 L85,150 C85,78 260,52 260,130 L260,132"/>
         </circle>
       </svg>
     </div>
@@ -1888,7 +1846,7 @@
 </section>
 
 <!-- Auroral oval map — moved here from opening, belongs with Earth's Armor -->
-<section class="scene" id="scene-13">
+<section class="scene" id="scene-12">
   <div class="stars"></div>
   <div class="aurora-bg aurora-blue" style="opacity:.35;">
     <div class="a-wave"></div>
@@ -1979,7 +1937,7 @@
   </div>
 </section>
 
-<section class="scene" id="scene-14">
+<section class="scene" id="scene-13">
   <div class="stars"></div>
   <div class="aurora-bg aurora-blue" style="opacity:.35;">
     <div class="a-wave"></div>
@@ -2019,7 +1977,7 @@
      PART 3 — WHY THESE COLORS?
      Includes color gallery (moved from old opening sequence).
 ==================================================== -->
-<section class="scene" id="scene-15">
+<section class="scene" id="scene-14">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2039,7 +1997,29 @@
   </div>
 </section>
 
-<!-- Scene 16: Altitude scale — what the "km" numbers mean -->
+
+<!-- Scene 15: The neon sign analogy -->
+<section class="scene" id="scene-15">
+  <div class="stars"></div>
+  <div class="aurora-bg aurora-blue" style="opacity:.4;">
+    <div class="a-wave"></div>
+  </div>
+  <div class="dim-overlay"></div>
+
+  <div class="sun-scene">
+    <div class="section-eyebrow">Part 3</div>
+    <h2 class="section-headline" style="margin-bottom:18px;">Think of a Neon Sign</h2>
+    <div class="sun-body">
+      <p>Electricity through gas makes colored light — that's all a neon sign is. <strong>Same physics.</strong> Just on a planetary scale: the Sun supplies the electricity, and Earth's atmosphere supplies the gas.</p>
+    </div>
+
+    <div class="neon-text-wrap">
+      <div class="neon-text">NEON</div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 16: Different heights, different colors -->
 <section class="scene" id="scene-16">
   <div class="stars"></div>
   <div class="aurora-bg">
@@ -2050,14 +2030,15 @@
 
   <div class="ts-scene">
     <div class="ts-badge altitude">Altitude</div>
-    <h2 class="ts-title">What Do the Km Numbers Mean?</h2>
+    <h2 class="ts-title">Different Heights, Different Colors</h2>
     <div class="ts-body">
-      <p>The aurora isn't one flat curtain — it's light coming from a whole range of heights above the ground,
-      roughly <strong>80 km to 300 km up</strong>. For reference, a commercial jet cruises around 10 km.
-      The aurora happens far above that, at the edge of space.</p>
-      <p>The higher you go, the thinner the air gets. Near the bottom of that range the atmosphere still has
-      some substance to it. Near the top, it's almost a vacuum — molecules are spaced so far apart that
-      collisions become rare.</p>
+      <p>The aurora isn't one flat curtain — it's light coming from a range of heights above the ground, and the
+      height decides the color. Near the top of that range, <strong>200 km and up</strong>, the air is so thin
+      that oxygen glows <strong>red</strong>. In the middle, around <strong>100–150 km</strong>, oxygen glows
+      the brighter, more familiar <strong>green</strong>. Near the bottom, <strong>80–120 km</strong>, the air
+      is dense enough to be mostly nitrogen, which glows <strong>blue and purple</strong>.</p>
+      <p>For reference, a commercial jet cruises around 10 km — the entire aurora happens far above that,
+      at the edge of space. Why does color track height so neatly? That's the next scene.</p>
     </div>
 
     <div class="alt-chart">
@@ -2100,25 +2081,20 @@
 
         <!-- reference tick: cruising altitude of a jet -->
         <line x1="260" y1="340" x2="440" y2="340" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="3,3"/>
-        <text x="450" y="344" fill="rgba(255,255,255,.55)" font-size="12" font-family="Inter,sans-serif">↖ jets cruise ~10 km</text>
+        <text x="450" y="344" fill="rgba(255,255,255,.6)" font-size="14" font-family="Inter,sans-serif">↖ jets cruise ~10 km</text>
 
-        <!-- leader-line labels, 16px per established convention -->
+        <!-- leader-line labels, all on the right so nothing runs off the left edge -->
         <g stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="2,3">
           <line x1="440" y1="90"  x2="500" y2="90"/>
           <line x1="440" y1="215" x2="500" y2="215"/>
-          <line x1="260" y1="250" x2="170" y2="250"/>
+          <line x1="440" y1="260" x2="500" y2="280"/>
         </g>
         <text x="505" y="95"  fill="rgba(255,140,120,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Red — 200 km and up</text>
         <text x="505" y="220" fill="rgba(120,255,170,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Green — ~100–150 km</text>
-        <text x="165" y="255" text-anchor="end" fill="rgba(190,140,255,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Blue &amp; purple — ~80–120 km</text>
+        <text x="505" y="285" fill="rgba(190,140,255,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Blue &amp; purple — ~80–120 km</text>
 
-        <text x="350" y="25" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="12" font-family="Inter,sans-serif">air keeps thinning above 300 km ↑</text>
+        <text x="350" y="25" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="14" font-family="Inter,sans-serif">air keeps thinning above 300 km ↑</text>
       </svg>
-    </div>
-
-    <div class="ts-callout">
-      <strong>Why this matters:</strong> the km number tells you how thin the air was where that light was made.
-      The next scene explains what decides how deep into that thinning air a particle gets.
     </div>
   </div>
 </section>
@@ -2144,8 +2120,8 @@
       sit for minutes before bumping into anything — just long enough for its slow red glow to escape.</p>
     </div>
 
-    <div class="energy-chart">
-      <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+    <div class="energy-chart" style="margin-top:14px;">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="altGradFaint" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%"   stop-color="#ff503c" stop-opacity=".22"/>
@@ -2157,105 +2133,49 @@
           </linearGradient>
         </defs>
 
-        <text x="350" y="18" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="12" font-family="Inter,sans-serif">particles arrive from the magnetosphere, each with its own energy</text>
+        <text x="350" y="20" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="14" font-family="Inter,sans-serif">Particles arrive from the magnetosphere, each with its own energy</text>
 
         <!-- atmosphere column (faint echo of the altitude scene) -->
-        <rect x="260" y="50" width="180" height="300" rx="4" fill="url(#altGradFaint)" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
-        <line x1="220" y1="350" x2="480" y2="350" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
-        <text x="350" y="372" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="12" font-family="Inter,sans-serif">Ground</text>
+        <rect x="260" y="45" width="180" height="270" rx="4" fill="url(#altGradFaint)" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+        <line x1="220" y1="315" x2="480" y2="315" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+        <text x="350" y="335" text-anchor="middle" fill="rgba(255,255,255,.65)" font-size="14" font-family="Inter,sans-serif">Ground</text>
 
         <!-- three particle paths, stopping at different depths -->
         <g stroke-width="2" fill="none">
-          <path d="M300,20 L300,100" stroke="rgba(255,120,100,.85)"/>
-          <path d="M350,20 L350,220" stroke="rgba(120,255,170,.85)"/>
-          <path d="M400,20 L400,260" stroke="rgba(190,140,255,.85)"/>
+          <path d="M300,15 L300,90"  stroke="rgba(255,120,100,.85)"/>
+          <path d="M350,15 L350,198" stroke="rgba(120,255,170,.85)"/>
+          <path d="M400,15 L400,234" stroke="rgba(190,140,255,.85)"/>
         </g>
-        <circle cx="300" cy="100" r="6" fill="#ff503c"/>
-        <circle cx="350" cy="220" r="6" fill="#50ff8c"/>
-        <circle cx="400" cy="260" r="6" fill="#a050ff"/>
+        <circle cx="300" cy="90"  r="6" fill="#ff503c"/>
+        <circle cx="350" cy="198" r="6" fill="#50ff8c"/>
+        <circle cx="400" cy="234" r="6" fill="#a050ff"/>
 
-        <!-- leader-line labels -->
+        <!-- leader-line labels, all on the right so nothing runs off the left edge -->
         <g stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="2,3">
-          <line x1="300" y1="100" x2="500" y2="80"/>
-          <line x1="350" y1="220" x2="150" y2="220"/>
-          <line x1="400" y1="260" x2="500" y2="290"/>
+          <line x1="300" y1="90"  x2="440" y2="78"/>
+          <line x1="350" y1="198" x2="440" y2="168"/>
+          <line x1="400" y1="234" x2="440" y2="255"/>
         </g>
 
-        <text x="505" y="75"  fill="rgba(255,140,120,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Low energy</text>
-        <text x="505" y="95"  fill="rgba(255,255,255,.7)"  font-size="13" font-family="Inter,sans-serif">stops ~250 km up — red</text>
+        <text x="445" y="75"  fill="rgba(255,140,120,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Low energy</text>
+        <text x="445" y="93"  fill="rgba(255,255,255,.75)" font-size="14" font-family="Inter,sans-serif">~250 km — red</text>
 
-        <text x="145" y="216" text-anchor="end" fill="rgba(120,255,170,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Medium energy</text>
-        <text x="145" y="234" text-anchor="end" fill="rgba(255,255,255,.7)"  font-size="13" font-family="Inter,sans-serif">most particles — ~130 km, green</text>
+        <text x="445" y="165" fill="rgba(120,255,170,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">Medium energy</text>
+        <text x="445" y="183" fill="rgba(255,255,255,.75)" font-size="14" font-family="Inter,sans-serif">~130 km — green (most common)</text>
 
-        <text x="505" y="285" fill="rgba(190,140,255,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">High energy</text>
-        <text x="505" y="305" fill="rgba(255,255,255,.7)"  font-size="13" font-family="Inter,sans-serif">punches to ~90 km — blue &amp; purple</text>
+        <text x="445" y="252" fill="rgba(190,140,255,.95)" font-size="16" font-weight="600" font-family="Inter,sans-serif">High energy</text>
+        <text x="445" y="270" fill="rgba(255,255,255,.75)" font-size="14" font-family="Inter,sans-serif">~90 km — blue &amp; purple</text>
       </svg>
     </div>
 
-    <div class="ts-callout">
+    <div class="ts-callout" style="margin-top:12px;">
       <strong>Put together:</strong> altitude tells you which gas got hit, and energy tells you how deep that hit happened.
       Green is the most common color because most auroral particles fall in that medium-energy range.
     </div>
   </div>
 </section>
 
-<!-- Color gallery — moved here from old opening sequence, belongs with Part 3 -->
-<section class="scene" id="scene-18" aria-label="Aurora color gallery">
-  <div class="gallery-header">
-    <h2>The Aurora Comes in Colors — Each Tells a Story</h2>
-  </div>
-
-  <!-- GREEN panel (Oxygen, ~100 km) -->
-  <div class="aurora-panel">
-    <div class="aurora-bg">
-      <div class="a-wave"></div>
-      <div class="a-wave"></div>
-      <div class="a-wave"></div>
-    </div>
-    <!-- ASSET PLACEHOLDER: <img src="assets/images/your-green-aurora.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6;"> -->
-    <div class="panel-label">
-      <div class="panel-color-name">Green</div>
-      <div class="panel-gas">Oxygen atoms</div>
-      <div class="panel-altitude alt-green">~100–150 km &nbsp;·&nbsp; Most common &nbsp;·&nbsp; Medium energy</div>
-    </div>
-  </div>
-
-  <div class="panel-divider"></div>
-
-  <!-- RED panel (Oxygen, 200 km+) -->
-  <div class="aurora-panel aurora-red">
-    <div class="aurora-bg">
-      <div class="a-wave"></div>
-      <div class="a-wave"></div>
-      <div class="a-wave"></div>
-    </div>
-    <!-- ASSET PLACEHOLDER: <img src="assets/images/your-red-aurora.jpg" ...> -->
-    <div class="panel-label">
-      <div class="panel-color-name">Red</div>
-      <div class="panel-gas">Oxygen atoms</div>
-      <div class="panel-altitude alt-red">200 km+ &nbsp;·&nbsp; Rare &nbsp;·&nbsp; Low energy</div>
-    </div>
-  </div>
-
-  <div class="panel-divider"></div>
-
-  <!-- BLUE-PURPLE panel (Nitrogen) -->
-  <div class="aurora-panel aurora-purple">
-    <div class="aurora-bg">
-      <div class="a-wave"></div>
-      <div class="a-wave"></div>
-      <div class="a-wave"></div>
-    </div>
-    <!-- ASSET PLACEHOLDER: <img src="assets/images/your-purple-aurora.jpg" ...> -->
-    <div class="panel-label">
-      <div class="panel-color-name">Blue-Purple</div>
-      <div class="panel-gas">Nitrogen molecules</div>
-      <div class="panel-altitude alt-purple">~80–120 km &nbsp;·&nbsp; Lower edge &nbsp;·&nbsp; High energy</div>
-    </div>
-  </div>
-</section>
-
-<section class="scene" id="scene-19">
+<section class="scene" id="scene-18">
   <div class="stars"></div>
   <div class="aurora-bg" style="opacity:.6;">
     <div class="a-wave"></div>
@@ -2277,7 +2197,7 @@
      PART 4 — THE RHYTHM
      Scene 14: Intro with timescale chips
 ==================================================== -->
-<section class="scene" id="scene-20">
+<section class="scene" id="scene-19">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2303,8 +2223,8 @@
 </section>
 
 
-<!-- Scene 15: Days scale — CME travel time + Bz uncertainty -->
-<section class="scene" id="scene-21">
+<!-- Scene 20: Days scale — CME travel time + Bz uncertainty -->
+<section class="scene" id="scene-20">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2332,8 +2252,8 @@
 </section>
 
 
-<!-- Scene 16: Hours scale — Kp misconception + oval comparison + audience split -->
-<section class="scene" id="scene-22">
+<!-- Scene 21: Hours scale — Kp misconception + oval comparison + audience split -->
+<section class="scene" id="scene-21">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2400,8 +2320,8 @@
 </section>
 
 
-<!-- Scene 17: Minutes scale — substorm + live magnetometer drawing in -->
-<section class="scene" id="scene-23">
+<!-- Scene 22: Minutes scale — substorm + live magnetometer drawing in -->
+<section class="scene" id="scene-22">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2428,8 +2348,8 @@
 </section>
 
 
-<!-- Scene 18: Knowledge Check — True/False, one question at a time -->
-<section class="scene" id="scene-24">
+<!-- Scene 23: Knowledge Check — True/False, one question at a time -->
+<section class="scene" id="scene-23">
   <div class="stars"></div>
   <div class="aurora-bg" style="opacity:.4;">
     <div class="a-wave"></div>
@@ -2465,7 +2385,7 @@
      PART 5 — THE CHASE: PUTTING IT ALL TOGETHER
      Scene 19: Intro — factors beyond the signal itself
 ==================================================== -->
-<section class="scene" id="scene-25">
+<section class="scene" id="scene-24">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2490,8 +2410,8 @@
 </section>
 
 
-<!-- Scene 20: Knowledge Check — branching "Plan Your Chase" checklist -->
-<section class="scene" id="scene-26">
+<!-- Scene 25: Knowledge Check — branching "Plan Your Chase" checklist -->
+<section class="scene" id="scene-25">
   <div class="stars"></div>
   <div class="aurora-bg" style="opacity:.4;">
     <div class="a-wave"></div>
@@ -2550,7 +2470,7 @@
 <!-- ====================================================
      FINAL ASSESSMENT — SPACE WEATHER FORECAST CHALLENGE
 ==================================================== -->
-<section class="scene" id="scene-27">
+<section class="scene" id="scene-26">
   <div class="stars"></div>
   <div class="aurora-bg">
     <div class="a-wave"></div>
@@ -2567,7 +2487,44 @@
       <br><br>
       This is where everything comes together.
     </p>
-    <div class="stub-tag">Four scenario-based reasoning tasks — coming soon</div>
+  </div>
+</section>
+
+<!-- Scene 27: Final assessment — four scenario-based briefings -->
+<section class="scene" id="scene-27">
+  <div class="stars"></div>
+  <div class="aurora-bg" style="opacity:.4;">
+    <div class="a-wave"></div>
+    <div class="a-wave"></div>
+  </div>
+
+  <div class="fa-scene">
+    <div class="tf-eyebrow">Final Assessment</div>
+    <div class="tf-progress" id="fa-progress">1 of 4</div>
+
+    <div class="fa-q-wrap" id="fa-q-wrap">
+      <div class="fa-location" id="fa-location"></div>
+      <div class="fa-subtitle" id="fa-subtitle"></div>
+
+      <div class="fa-briefing" id="fa-briefing"></div>
+
+      <div class="fa-question" id="fa-question"></div>
+      <div class="tf-buttons">
+        <button class="tf-btn" id="fa-yes" onclick="answerFA(true)">Yes</button>
+        <button class="tf-btn" id="fa-no"  onclick="answerFA(false)">No</button>
+      </div>
+      <div class="tf-feedback" id="fa-feedback"></div>
+      <button class="tf-next" id="fa-next" onclick="advanceFA()">Next →</button>
+    </div>
+
+    <div class="tf-complete" id="fa-complete">
+      <div class="tf-complete-head">That's the whole picture.</div>
+      <div class="tf-complete-body">
+        The Sun, the shield, the colors, the rhythm, the chase — every signal you just weighed came from
+        somewhere earlier in this module. Real forecasting is exactly this: no single number tells the
+        whole story, and the right call comes from putting them together.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2586,11 +2543,11 @@
     null, null, null, null, null,  // 0-4  (opening + questions)
     null,                          // 5    (poll — pre-content)
     0, 0, 0, 0,                    // 6-9  (Part 1: The Sun — wind, CME, cycle, KC)
-    1, 1, 1, 1, 1,                 // 10-14 (Part 2: Shield, neon, particle, oval, KC)
-    2, 2, 2, 2, 2,                 // 15-19 (Part 3: Colors, altitude, energy, gallery, KC)
-    3, 3, 3, 3, 3,                 // 20-24 (Part 4: The Rhythm — full content)
-    4, 4,                          // 25-26 (Part 5: The Chase)
-    null                           // 27   (final)
+    1, 1, 1, 1,                    // 10-13 (Part 2: Shield, particle, oval, KC)
+    2, 2, 2, 2, 2,                 // 14-18 (Part 3: Colors intro, neon, altitude, energy, KC)
+    3, 3, 3, 3, 3,                 // 19-23 (Part 4: The Rhythm — full content)
+    4, 4,                          // 24-25 (Part 5: The Chase)
+    null, null                     // 26-27 (final assessment intro + scenarios)
   ];
 
   const PART_NAMES = [
@@ -2675,24 +2632,25 @@
       }, 3200);
     }
     if (n === 9)  initSort();
-    if (n === 14) initTap();
-    if (n === 20) animateChips();
-    if (n === 23) startMagnetometer();
-    if (n === 24) initTF();
-    if (n === 26) initChase();
+    if (n === 13) initTap();
+    if (n === 19) animateChips();
+    if (n === 22) startMagnetometer();
+    if (n === 23) initTF();
+    if (n === 25) initChase();
+    if (n === 27) initFA();
   }
 
   // ──────────────────────────────────────────────
   // PART 4 — SCENE 14: TIMESCALE WORD ANIMATIONS
   // ──────────────────────────────────────────────
   function animateChips() {
-    const items = [...document.querySelectorAll('#scene-20 .ts-words > *')];
+    const items = [...document.querySelectorAll('#scene-19 .ts-words > *')];
     items.forEach(c => {
       c.classList.remove('show');
       c.style.transition = 'none';
     });
     // Force reflow before re-enabling transitions
-    void document.querySelector('#scene-20 .ts-words').offsetWidth;
+    void document.querySelector('#scene-19 .ts-words').offsetWidth;
     items.forEach((c, i) => {
       c.style.transition = '';
       setTimeout(() => c.classList.add('show'), 600 + i * 280);
@@ -2931,6 +2889,121 @@
   }
 
   // ──────────────────────────────────────────────
+  // FINAL ASSESSMENT — four scenario-based briefings
+  // ──────────────────────────────────────────────
+  const FA_SCENARIOS = [
+    {
+      location: 'Tromsø, Norway',
+      subtitle: 'A large CME left the Sun two days ago, right on schedule.',
+      briefing: [
+        { label: 'CME', value: 'Large, fast (~1500 km/s)' },
+        { label: 'Expected arrival', value: 'Tonight' },
+        { label: 'Bz (just measured, cloud nearing Earth)', value: 'Strongly north' }
+      ],
+      question: 'Good chance of seeing the aurora tonight?',
+      answer: false,
+      feedback: '<strong>No.</strong> Size and speed don’t matter if Bz won’t couple with Earth’s field. A north-pointing Bz mostly fizzles, no matter how big or fast the CME was. The factor that decides the show can’t be measured until the cloud nearly arrives — and tonight, it’s pointing the wrong way.'
+    },
+    {
+      location: 'Reykjavik, Iceland',
+      subtitle: 'A casual forecast app just sent you a notification.',
+      briefing: [
+        { label: 'Kp forecast', value: '3 (low)' },
+        { label: 'App says', value: '“Low activity expected”' }
+      ],
+      question: 'Good chance of seeing the aurora tonight?',
+      answer: true,
+      feedback: '<strong>Yes — still worth going out.</strong> Kp measures how far south the auroral oval expands, not brightness. At Reykjavik’s latitude you’re already inside the oval almost regardless of Kp. A low Kp number barely tells you anything about your sky.'
+    },
+    {
+      location: 'Northern Michigan',
+      subtitle: 'Clear skies, decent activity — but the night’s been quiet so far.',
+      briefing: [
+        { label: 'Kp forecast', value: '6 (decent)' },
+        { label: 'Sky', value: 'Clear, you’re outside watching' },
+        { label: 'Local magnetometer', value: 'Flat for the last 2 hours' }
+      ],
+      question: 'Is it safe to assume nothing will happen and head inside?',
+      answer: false,
+      feedback: '<strong>No — don’t give up yet.</strong> A quiet magnetometer right now doesn’t mean it’ll stay quiet. Substorm breakouts happen on a timescale of minutes, often without much warning. A flat trace at 9pm says nothing about 11:47pm.'
+    },
+    {
+      location: 'A high-latitude site, June solstice',
+      subtitle: 'Every geomagnetic signal lines up — for once.',
+      briefing: [
+        { label: 'CME', value: 'Strong, well-timed' },
+        { label: 'Bz', value: 'South-pointing (favorable)' },
+        { label: 'Kp forecast', value: '~7' },
+        { label: 'Date', value: 'Summer solstice — near-24-hour daylight' }
+      ],
+      question: 'Good chance of seeing the aurora tonight?',
+      answer: false,
+      feedback: '<strong>No — it won’t be dark enough.</strong> Every geomagnetic factor is favorable, but at high latitude in midsummer the sky never gets truly dark. Even a strong aurora is invisible against the midnight sun. Timing the season matters as much as timing the storm.'
+    }
+  ];
+
+  let faIdx = 0;
+
+  function initFA() {
+    faIdx = 0;
+    el('fa-q-wrap').style.display = '';
+    el('fa-complete').classList.remove('visible');
+    loadFAScenario();
+  }
+
+  function loadFAScenario() {
+    const s = FA_SCENARIOS[faIdx];
+    el('fa-progress').textContent = (faIdx + 1) + ' of ' + FA_SCENARIOS.length;
+    el('fa-location').textContent = s.location;
+    el('fa-subtitle').textContent = s.subtitle;
+    el('fa-question').textContent = s.question;
+
+    el('fa-briefing').innerHTML = s.briefing.map(row =>
+      `<div class="fa-briefing-row"><span class="fa-briefing-label">${row.label}</span><span class="fa-briefing-value">${row.value}</span></div>`
+    ).join('');
+
+    const fb = el('fa-feedback');
+    fb.innerHTML = ''; fb.classList.remove('visible');
+
+    const nxt = el('fa-next');
+    nxt.classList.remove('visible');
+    nxt.textContent = faIdx < FA_SCENARIOS.length - 1 ? 'Next →' : 'Continue →';
+
+    ['fa-yes', 'fa-no'].forEach(id => {
+      const b = el(id);
+      b.disabled = false;
+      b.classList.remove('correct', 'wrong');
+    });
+  }
+
+  function answerFA(chosen) {
+    const s = FA_SCENARIOS[faIdx];
+    ['fa-yes', 'fa-no'].forEach(id => { el(id).disabled = true; });
+
+    const yesBtn = el('fa-yes');
+    const noBtn  = el('fa-no');
+    (s.answer ? yesBtn : noBtn).classList.add('correct');
+    if (chosen !== s.answer) {
+      (chosen ? yesBtn : noBtn).classList.add('wrong');
+    }
+
+    const fb = el('fa-feedback');
+    fb.innerHTML = s.feedback;
+    setTimeout(() => fb.classList.add('visible'), 120);
+    setTimeout(() => el('fa-next').classList.add('visible'), 750);
+  }
+
+  function advanceFA() {
+    faIdx++;
+    if (faIdx >= FA_SCENARIOS.length) {
+      el('fa-q-wrap').style.display = 'none';
+      el('fa-complete').classList.add('visible');
+    } else {
+      loadFAScenario();
+    }
+  }
+
+  // ──────────────────────────────────────────────
   // PART 5 — SCENE 20: PLAN YOUR CHASE (branching)
   // ──────────────────────────────────────────────
   let chaseLoc = null, chaseSeason = null;
@@ -2959,12 +3032,12 @@
     el('chase-step-2').style.display = 'none';
     el('chase-result').style.display = 'none';
     el('chase-lowlat').style.display = 'none';
-    document.querySelectorAll('#scene-26 .chase-card[data-loc]').forEach(c => c.classList.remove('picked'));
+    document.querySelectorAll('#scene-25 .chase-card[data-loc]').forEach(c => c.classList.remove('picked'));
   }
 
   function pickLocation(loc) {
     chaseLoc = loc;
-    document.querySelectorAll('#scene-26 .chase-card[data-loc]').forEach(c => {
+    document.querySelectorAll('#scene-25 .chase-card[data-loc]').forEach(c => {
       c.classList.toggle('picked', c.dataset.loc === loc);
     });
     setTimeout(() => {
