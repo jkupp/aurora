@@ -1193,10 +1193,78 @@
       font-size: clamp(1.2rem, 2.4vw, 1.8rem);
       color: var(--text-bright); margin-bottom: 10px;
     }
-    .sort-complete-body {
+    .sort-complete-body,
+    .match-complete-body {
       font-size: clamp(.9rem, 1.5vw, 1.05rem);
       color: var(--text-secondary); line-height: 1.7;
       max-width: 520px; margin: 0 auto;
+    }
+
+    /* ================================================================
+       PART 3 — KC: NAME THAT COLOR (photo matching)
+    ================================================================ */
+    .match-scene {
+      position: relative; z-index: 2;
+      max-width: 980px; width: 100%;
+      padding: 0 36px; text-align: center;
+      animation: scene-fadein .9s ease .2s both;
+    }
+    .match-instructions {
+      font-size: .85rem; color: var(--text-secondary);
+      margin-bottom: 18px;
+    }
+    .match-deck {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      justify-content: center;
+      min-height: 56px;
+      margin-bottom: 22px;
+    }
+    .match-panels {
+      display: flex; gap: 4px;
+      height: clamp(220px, 36vh, 380px);
+    }
+    .match-panel {
+      position: relative;
+      flex: 1; overflow: hidden;
+      border: none; border-radius: 6px;
+      padding: 0; cursor: pointer;
+      background: none;
+      transition: flex .4s ease, outline-color var(--t-fast);
+      outline: 2px solid transparent; outline-offset: 2px;
+    }
+    .match-panel:hover { flex: 1.08; }
+    .match-photo {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .match-panel.solved { outline-color: var(--green); }
+    .match-panel.wrong { animation: sort-shake .4s ease; outline-color: rgba(255,90,70,.85); }
+
+    .match-caption {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 14px 12px 12px;
+      background: linear-gradient(transparent, rgba(2,2,21,.92));
+      text-align: left;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .match-panel.solved .match-caption { opacity: 1; transform: translateY(0); }
+    .match-caption-title {
+      font-family: 'Cinzel', serif;
+      font-size: .92rem; font-weight: 600;
+      color: var(--text-bright); margin-bottom: 2px;
+    }
+    .match-caption-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: .72rem; color: var(--text-secondary);
+    }
+
+    .match-complete { display: none; margin-top: 26px; }
+    .match-complete.visible { display: block; animation: reveal-up .7s ease both; }
+    .match-complete-head {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+      color: var(--text-bright); margin-bottom: 10px;
     }
 
     /* ================================================================
@@ -1326,6 +1394,134 @@
       font-size: clamp(1.05rem, 1.85vw, 1.3rem);
       font-weight: 400; color: var(--text-bright);
       margin-bottom: 22px;
+    }
+
+    /* ================================================================
+       CONCLUSION — visual recap of all five parts
+    ================================================================ */
+    .conclusion-bg { position: absolute; inset: 0; overflow: hidden; }
+    .conclusion-photo {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0;
+      animation: conclusion-fade 36s ease-in-out infinite;
+    }
+    @keyframes conclusion-fade {
+      0%   { opacity: 0; }
+      4%   { opacity: .5; }
+      22%  { opacity: .5; }
+      28%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    .conclusion-scene {
+      position: relative; z-index: 2;
+      max-width: 920px; width: 100%;
+      padding: 0 40px; text-align: center;
+      animation: scene-fadein .9s ease .15s both;
+    }
+
+    .conclusion-badges {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 28px; margin: 10px 0 36px;
+    }
+    .c-badge {
+      width: 150px;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .c-badge.show { opacity: 1; transform: translateY(0); }
+    .c-badge-icon {
+      width: 76px; height: 76px; margin: 0 auto 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .c-badge-icon svg { width: 100%; height: 100%; display: block; }
+    .c-badge-dots { display: flex; gap: 6px; }
+    .c-badge-dots span { width: 14px; height: 14px; border-radius: 50%; display: block; }
+    .c-badge-rhythm {
+      font-family: 'Cinzel', serif; font-size: .92rem; font-weight: 700;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .c-badge-rhythm .c-r-arrow { color: rgba(255,255,255,.35); font-size: .75rem; }
+    .c-badge-label {
+      font-family: 'Cinzel', serif; font-size: .82rem; font-weight: 600;
+      color: var(--text-bright); margin-bottom: 4px;
+    }
+    .c-badge-sub {
+      font-family: 'Inter', sans-serif; font-size: .72rem; line-height: 1.4;
+      color: var(--text-secondary);
+    }
+
+    .conclusion-line {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.3rem, 2.6vw, 2rem);
+      font-weight: 600; line-height: 1.4;
+      color: var(--text-bright);
+      margin: 10px 0 34px;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .conclusion-line.show { opacity: 1; transform: translateY(0); }
+
+    .btn-credits {
+      font-family: 'Cinzel', serif;
+      font-size: .82rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--green); background: none;
+      border: 1px solid rgba(80,255,140,.38);
+      padding: 12px 34px; border-radius: 4px; cursor: pointer;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity .6s ease, transform .6s ease, background var(--t-fast), border-color var(--t-fast);
+    }
+    .btn-credits.show { opacity: 1; transform: translateY(0); }
+    .btn-credits:hover { background: rgba(80,255,140,.1); border-color: var(--green); }
+
+    /* ================================================================
+       CREDITS
+    ================================================================ */
+    .credits-scene {
+      position: relative; z-index: 2;
+      max-width: 760px; width: 100%;
+      padding: 0 40px; text-align: center;
+      animation: scene-fadein .9s ease .2s both;
+    }
+    .credits-intro {
+      font-size: .9rem; color: var(--text-secondary);
+      max-width: 480px; margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+    .credits-columns {
+      display: flex; flex-wrap: wrap;
+      justify-content: center;
+      gap: 36px;
+      text-align: left;
+      margin-bottom: 36px;
+    }
+    .credits-col { min-width: 190px; }
+    .credits-col-title {
+      font-family: 'Inter', sans-serif;
+      font-size: .68rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 12px;
+    }
+    .credits-list { list-style: none; }
+    .credits-list li { margin-bottom: 9px; }
+    .credits-list a {
+      font-size: .88rem; color: var(--text-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      transition: color var(--t-fast), border-color var(--t-fast);
+    }
+    .credits-list a:hover { color: var(--text-bright); border-color: rgba(255,255,255,.55); }
+
+    .credits-dedication {
+      font-family: 'Cinzel', serif; font-style: italic;
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      color: var(--text-secondary);
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.1);
     }
 
     /* ================================================================
@@ -2177,18 +2373,36 @@
 
 <section class="scene" id="scene-18">
   <div class="stars"></div>
-  <div class="aurora-bg" style="opacity:.6;">
-    <div class="a-wave"></div>
-    <div class="a-wave"></div>
-  </div>
 
-  <div class="section-card">
+  <div class="match-scene">
     <div class="section-eyebrow">Part 3 — Knowledge Check</div>
-    <h2 class="section-headline">Name That Color</h2>
-    <p class="section-body">
-      Drag the gas labels onto the color bands in a real aurora photograph.
-    </p>
-    <div class="stub-tag">Drag-and-drop annotation — coming soon</div>
+    <h2 class="section-headline" style="margin-bottom:8px;">Name That Color</h2>
+    <p class="match-instructions">Select a cause below, then tap the photo it explains.</p>
+
+    <div class="match-deck" id="match-deck"></div>
+
+    <div class="match-panels">
+      <button class="match-panel" data-color="green" onclick="placeColor('green')">
+        <img class="match-photo" src="assets/images/Maardu_Northern_lights_—_Estonia,_2022-green.jpg" alt="Green aurora over the coast in Estonia">
+        <div class="match-caption" id="match-caption-green"></div>
+      </button>
+      <button class="match-panel" data-color="purple" onclick="placeColor('purple')">
+        <img class="match-photo" src="assets/images/G5_aurora_over_Tuntorp,_Lysekil_Municipality_15-purple.jpg" alt="Purple and violet aurora over trees in Sweden">
+        <div class="match-caption" id="match-caption-purple"></div>
+      </button>
+      <button class="match-panel" data-color="red" onclick="placeColor('red')">
+        <img class="match-photo" src="assets/images/Aurora_australis_panorama-red.jpg" alt="Red aurora australis over a hillside">
+        <div class="match-caption" id="match-caption-red"></div>
+      </button>
+    </div>
+
+    <div class="match-complete" id="match-complete">
+      <div class="match-complete-head">Color, decoded.</div>
+      <div class="match-complete-body">
+        Every shade in these photos has an address in the sky — a gas, an altitude, and an energy level behind it.
+        Next up: the rhythm that makes the whole thing so hard to predict.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2530,13 +2744,120 @@
 
 
 <!-- ====================================================
+     CONCLUSION — visual recap of all five parts
+==================================================== -->
+<section class="scene" id="scene-28">
+  <div class="conclusion-bg">
+    <div class="conclusion-photo" style="background-image:url('assets/images/pexels-evelin-34540965.jpg'); animation-delay:0s;"></div>
+    <div class="conclusion-photo" style="background-image:url('assets/images/GSFC_20171208_Archive_e001655~orig.jpg'); animation-delay:-9s;"></div>
+    <div class="conclusion-photo" style="background-image:url('assets/images/pexels-sandyco-24264264.jpg'); animation-delay:-18s;"></div>
+    <div class="conclusion-photo" style="background-image:url('assets/images/iceland-2025.JPG'); animation-delay:-27s;"></div>
+  </div>
+  <div class="dim-overlay"></div>
+
+  <div class="conclusion-scene">
+    <div class="section-eyebrow">Journey Complete</div>
+
+    <div class="conclusion-badges" id="conclusion-badges">
+      <div class="c-badge">
+        <div class="c-badge-icon"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="url(#followSun)"/></svg></div>
+        <div class="c-badge-label">Our Restless Sun</div>
+        <div class="c-badge-sub">An 11-year heartbeat of activity</div>
+      </div>
+      <div class="c-badge">
+        <div class="c-badge-icon"><svg viewBox="120 70 280 160"><use href="#magnetosphere-diagram"/></svg></div>
+        <div class="c-badge-label">Earth's Invisible Armor</div>
+        <div class="c-badge-sub">A shield with two open doors</div>
+      </div>
+      <div class="c-badge">
+        <div class="c-badge-icon"><div class="c-badge-dots">
+          <span style="background:#50ff8c;"></span><span style="background:#ff503c;"></span><span style="background:#a050ff;"></span>
+        </div></div>
+        <div class="c-badge-label">Why These Colors?</div>
+        <div class="c-badge-sub">Altitude and energy, painted in light</div>
+      </div>
+      <div class="c-badge">
+        <div class="c-badge-icon"><div class="c-badge-rhythm">
+          <span style="color:rgba(255,190,60,.95);">D</span><span class="c-r-arrow">→</span>
+          <span style="color:rgba(0,220,210,.95);">H</span><span class="c-r-arrow">→</span>
+          <span style="color:rgba(80,255,140,.95);">M</span>
+        </div></div>
+        <div class="c-badge-label">The Rhythm</div>
+        <div class="c-badge-sub">Three timescales, three reasons it's unpredictable</div>
+      </div>
+      <div class="c-badge">
+        <div class="c-badge-icon"><svg viewBox="0 0 100 100">
+          <path d="M50 10 C30 10 16 24 16 44 C16 68 50 90 50 90 C50 90 84 68 84 44 C84 24 70 10 50 10 Z" fill="none" stroke="rgba(80,255,140,.8)" stroke-width="5"/>
+          <circle cx="50" cy="42" r="13" fill="rgba(80,255,140,.22)" stroke="rgba(80,255,140,.8)" stroke-width="3"/>
+        </svg></div>
+        <div class="c-badge-label">The Chase</div>
+        <div class="c-badge-sub">Darkness, latitude, and a little luck</div>
+      </div>
+    </div>
+
+    <div class="conclusion-line" id="conclusion-line">Aurora: now a little less mysterious, just as beautiful.</div>
+
+    <button class="btn-credits" id="btn-credits" onclick="goTo(29)">Credits &nbsp;→</button>
+  </div>
+</section>
+
+<!-- Scene 29: Credits -->
+<section class="scene" id="scene-29">
+  <div class="stars"></div>
+
+  <div class="credits-scene">
+    <div class="section-eyebrow">Credits</div>
+    <h2 class="section-headline">With Thanks</h2>
+    <p class="credits-intro">This module was built using openly shared photos, video, and music. Many thanks to:</p>
+
+    <div class="credits-columns">
+      <div class="credits-col">
+        <div class="credits-col-title">Photos</div>
+        <ul class="credits-list">
+          <li><a href="https://commons.wikimedia.org/wiki/File:Magnificent_CME_Erupts_on_the_Sun_-_August_31.jpg" target="_blank" rel="noopener">NASA Goddard Space Flight Center</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File:Aurora_australis_panorama.jpg" target="_blank" rel="noopener">flagstaffotos@gmail.com</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File:Maardu_Northern_lights_%E2%80%94_Estonia,_2022.jpg" target="_blank" rel="noopener">Maxim Bilovitskiy</a></li>
+          <li><a href="https://commons.wikimedia.org/wiki/File:G5_aurora_over_Tuntorp,_Lysekil_Municipality_15.jpg" target="_blank" rel="noopener">W.carter</a></li>
+          <li><a href="https://images.nasa.gov/details/GSFC_20171208_Archive_e000760" target="_blank" rel="noopener">Sebastian Saarloos</a></li>
+          <li><a href="https://images.nasa.gov/details/GSFC_20171208_Archive_e001655" target="_blank" rel="noopener">Joseph Bradley</a></li>
+          <li><a href="https://www.pexels.com/photo/stunning-northern-lights-over-estonian-coastline-34540965/" target="_blank" rel="noopener">Evelin Magnus</a></li>
+          <li><a href="https://www.pexels.com/photo/photo-of-bright-northern-lights-24264264/" target="_blank" rel="noopener">Sandrine Cornille</a></li>
+          <li><a href="https://www.pexels.com/photo/dawn-by-the-stream-26646276/" target="_blank" rel="noopener">Funky Fresh Traveles</a></li>
+        </ul>
+      </div>
+
+      <div class="credits-col">
+        <div class="credits-col-title">Videos</div>
+        <ul class="credits-list">
+          <li><a href="https://www.pexels.com/video/the-aurora-bore-is-shown-in-this-photo-25988225/" target="_blank" rel="noopener">Mohammed Abubakr</a></li>
+          <li><a href="https://www.pexels.com/video/aurora-borealis-over-snowy-cabins-at-night-31401354/" target="_blank" rel="noopener">Utkarsh Malviya</a></li>
+          <li><a href="https://www.pexels.com/video/northern-lights-time-lapse-5700806/" target="_blank" rel="noopener">Nico Becker</a></li>
+          <li><a href="https://www.pexels.com/video/stunning-aurora-borealis-in-night-sky-timelapse-28889010/" target="_blank" rel="noopener">Frank Cone</a></li>
+          <li><a href="https://www.pexels.com/video/the-aurora-bore-lights-up-the-sky-over-a-mountain-27791489/" target="_blank" rel="noopener">Luke Miller</a></li>
+        </ul>
+      </div>
+
+      <div class="credits-col">
+        <div class="credits-col-title">Audio</div>
+        <ul class="credits-list">
+          <li><a href="https://pixabay.com/music/ambient-space-ambient-435262/" target="_blank" rel="noopener">Playstarz Music</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="credits-dedication">For Toko</div>
+  </div>
+</section>
+
+
+<!-- ====================================================
      JAVASCRIPT
 ==================================================== -->
 <script>
   // ──────────────────────────────────────────────
   // SCENE MANAGER
   // ──────────────────────────────────────────────
-  const TOTAL = 28;   // scenes 0 – 27
+  const TOTAL = 30;   // scenes 0 – 29
 
   // Which dot (0–4) each scene belongs to; null = no dot active
   const SCENE_PART = [
@@ -2547,7 +2868,8 @@
     2, 2, 2, 2, 2,                 // 14-18 (Part 3: Colors intro, neon, altitude, energy, KC)
     3, 3, 3, 3, 3,                 // 19-23 (Part 4: The Rhythm — full content)
     4, 4,                          // 24-25 (Part 5: The Chase)
-    null, null                     // 26-27 (final assessment intro + scenarios)
+    null, null,                    // 26-27 (final assessment intro + scenarios)
+    null, null                     // 28-29 (conclusion + credits)
   ];
 
   const PART_NAMES = [
@@ -2599,6 +2921,8 @@
 
     btnPrev.disabled = cur <= 2;
     btnNext.disabled = cur >= TOTAL - 1;
+    // The conclusion scene uses its own "Credits" button as the only way forward
+    btnNext.style.visibility = (cur === 28) ? 'hidden' : '';
 
     // Progress fill
     el('progress-fill').style.width = (cur / (TOTAL - 1) * 100) + '%';
@@ -2633,11 +2957,13 @@
     }
     if (n === 9)  initSort();
     if (n === 13) initTap();
+    if (n === 18) initMatch();
     if (n === 19) animateChips();
     if (n === 22) startMagnetometer();
     if (n === 23) initTF();
     if (n === 25) initChase();
     if (n === 27) initFA();
+    if (n === 28) animateConclusionBadges();
   }
 
   // ──────────────────────────────────────────────
@@ -2655,6 +2981,31 @@
       c.style.transition = '';
       setTimeout(() => c.classList.add('show'), 600 + i * 280);
     });
+  }
+
+  // ──────────────────────────────────────────────
+  // CONCLUSION — staggered badge reveal
+  // ──────────────────────────────────────────────
+  function animateConclusionBadges() {
+    const badges = [...document.querySelectorAll('#conclusion-badges .c-badge')];
+    const line   = el('conclusion-line');
+    const btn    = el('btn-credits');
+
+    [...badges, line, btn].forEach(node => {
+      node.classList.remove('show');
+      node.style.transition = 'none';
+    });
+    void el('conclusion-badges').offsetWidth;
+
+    badges.forEach((b, i) => {
+      b.style.transition = '';
+      setTimeout(() => b.classList.add('show'), 300 + i * 220);
+    });
+    const afterBadges = 300 + badges.length * 220;
+    line.style.transition = '';
+    btn.style.transition  = '';
+    setTimeout(() => line.classList.add('show'), afterBadges + 200);
+    setTimeout(() => btn.classList.add('show'),  afterBadges + 700);
   }
 
   // ──────────────────────────────────────────────
@@ -2906,14 +3257,15 @@
     },
     {
       location: 'Reykjavik, Iceland',
-      subtitle: 'A casual forecast app just sent you a notification.',
+      subtitle: 'A quiet-looking night, geomagnetically speaking.',
       briefing: [
         { label: 'Kp forecast', value: '3 (low)' },
-        { label: 'App says', value: '“Low activity expected”' }
+        { label: 'Sky', value: 'Partly cloudy' },
+        { label: 'Season', value: 'Winter' }
       ],
-      question: 'Good chance of seeing the aurora tonight?',
+      question: 'Worth going out tonight?',
       answer: true,
-      feedback: '<strong>Yes — still worth going out.</strong> Kp measures how far south the auroral oval expands, not brightness. At Reykjavik’s latitude you’re already inside the oval almost regardless of Kp. A low Kp number barely tells you anything about your sky.'
+      feedback: '<strong>Yes — still worth going out.</strong> Kp measures how far south the auroral oval expands, not brightness. At Reykjavik’s latitude you’re already inside the oval almost regardless of Kp. A low Kp number barely tells you anything about your sky — and winter darkness and partly cloudy skies still leave you real odds.'
     },
     {
       location: 'Northern Michigan',
@@ -2928,13 +3280,13 @@
       feedback: '<strong>No — don’t give up yet.</strong> A quiet magnetometer right now doesn’t mean it’ll stay quiet. Substorm breakouts happen on a timescale of minutes, often without much warning. A flat trace at 9pm says nothing about 11:47pm.'
     },
     {
-      location: 'A high-latitude site, June solstice',
+      location: 'A high-latitude site',
       subtitle: 'Every geomagnetic signal lines up — for once.',
       briefing: [
         { label: 'CME', value: 'Strong, well-timed' },
         { label: 'Bz', value: 'South-pointing (favorable)' },
         { label: 'Kp forecast', value: '~7' },
-        { label: 'Date', value: 'Summer solstice — near-24-hour daylight' }
+        { label: 'Date', value: 'Summer solstice' }
       ],
       question: 'Good chance of seeing the aurora tonight?',
       answer: false,
@@ -2947,6 +3299,7 @@
   function initFA() {
     faIdx = 0;
     el('fa-q-wrap').style.display = '';
+    el('fa-progress').style.display = '';
     el('fa-complete').classList.remove('visible');
     loadFAScenario();
   }
@@ -2997,6 +3350,7 @@
     faIdx++;
     if (faIdx >= FA_SCENARIOS.length) {
       el('fa-q-wrap').style.display = 'none';
+      el('fa-progress').style.display = 'none';
       el('fa-complete').classList.add('visible');
     } else {
       loadFAScenario();
@@ -3166,6 +3520,62 @@
     } else {
       zone.classList.add('wrong');
       setTimeout(() => zone.classList.remove('wrong'), 500);
+    }
+  }
+
+  // ──────────────────────────────────────────────
+  // PART 3 — SCENE 18: NAME THAT COLOR (photo matching)
+  // ──────────────────────────────────────────────
+  const MATCH_ITEMS = [
+    { color: 'green',  text: 'Oxygen, ~100–150 km', sub: 'The most common color' },
+    { color: 'red',    text: 'Oxygen, 200 km and up', sub: 'Thin air, slow glow' },
+    { color: 'purple', text: 'Nitrogen, ~80–120 km', sub: 'The dense lower edge' }
+  ];
+
+  let matchSelected = null;
+  let matchSolved = {};
+
+  function initMatch() {
+    matchSelected = null;
+    matchSolved = {};
+    el('match-complete').classList.remove('visible');
+    document.querySelectorAll('#scene-18 .match-panel').forEach(p => p.classList.remove('solved', 'wrong'));
+    document.querySelectorAll('#scene-18 .match-caption').forEach(c => c.innerHTML = '');
+    renderMatchDeck();
+  }
+
+  function renderMatchDeck() {
+    const deck = el('match-deck');
+    deck.innerHTML = MATCH_ITEMS.map((item, i) => {
+      if (matchSolved[item.color]) return '';
+      return '<button class="sort-card' + (matchSelected === i ? ' selected' : '') +
+             '" onclick="selectMatchChip(' + i + ')">' + item.text + '</button>';
+    }).join('');
+  }
+
+  function selectMatchChip(i) {
+    matchSelected = (matchSelected === i) ? null : i;
+    renderMatchDeck();
+  }
+
+  function placeColor(color) {
+    if (matchSelected === null) return;
+    const item  = MATCH_ITEMS[matchSelected];
+    const panel = document.querySelector('#scene-18 .match-panel[data-color="' + color + '"]');
+
+    if (item.color === color) {
+      matchSolved[color] = true;
+      matchSelected = null;
+      panel.classList.add('solved');
+      el('match-caption-' + color).innerHTML =
+        '<div class="match-caption-title">' + item.text + '</div><div class="match-caption-sub">' + item.sub + '</div>';
+      renderMatchDeck();
+      if (Object.keys(matchSolved).length === MATCH_ITEMS.length) {
+        setTimeout(() => el('match-complete').classList.add('visible'), 400);
+      }
+    } else {
+      panel.classList.add('wrong');
+      setTimeout(() => panel.classList.remove('wrong'), 500);
     }
   }
 
