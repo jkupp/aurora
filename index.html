@@ -1237,6 +1237,12 @@
       position: absolute; inset: 0;
       width: 100%; height: 100%; object-fit: cover;
     }
+    /* This source photo is an extreme wide panorama with a tall black foreground band;
+       a plain cover crop mostly shows that black band, so it needs a manual zoom/offset
+       to keep the colored sky in frame. */
+    .match-photo.photo-pano-red {
+      height: 190%; top: -40%; object-position: 72% center;
+    }
     .match-panel.solved { outline-color: var(--green); }
     .match-panel.wrong { animation: sort-shake .4s ease; outline-color: rgba(255,90,70,.85); }
 
@@ -2144,7 +2150,7 @@
     <h3 class="sort-prompt">Where Can They Enter?</h3>
     <p class="sort-instructions">
       Tap the spots where charged particles can funnel into Earth's atmosphere.
-      &nbsp;<span id="tap-progress">0 of 2 found</span>
+      <span id="tap-progress">0 of 2 found</span>
     </p>
 
     <div class="cycle-chart">
@@ -2391,7 +2397,7 @@
         <div class="match-caption" id="match-caption-purple"></div>
       </button>
       <button class="match-panel" data-color="red" onclick="placeColor('red')">
-        <img class="match-photo" src="assets/images/Aurora_australis_panorama-red.jpg" alt="Red aurora australis over a hillside">
+        <img class="match-photo photo-pano-red" src="assets/images/Aurora_australis_panorama-red.jpg" alt="Red aurora australis over a hillside">
         <div class="match-caption" id="match-caption-red"></div>
       </button>
     </div>
