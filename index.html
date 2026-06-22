@@ -1706,7 +1706,7 @@
   </div>
   <div class="slide">
     <!-- VIDEO SLIDE — swap for your best timelapse once reviewed -->
-    <video id="slideshow-video" src="assets/video/12225760_1920_1080_30fps.mp4" preload="none" muted loop playsinline></video>
+    <video id="slideshow-video" data-src="assets/video/12225760_1920_1080_30fps.mp4" preload="none" muted loop playsinline></video>
   </div>
 
   <div id="slideshow-footer">
@@ -1721,7 +1721,7 @@
      SWAP: replace src below when you've reviewed your clips.
 ==================================================== -->
 <section class="scene" id="scene-2">
-  <video id="title-video" class="scene-video" src="assets/video/12505178_1920_1080_60fps.mp4"
+  <video id="title-video" class="scene-video" data-src="assets/video/12505178_1920_1080_60fps.mp4"
          preload="none" muted loop playsinline></video>
   <div class="vignette"></div>
   <div class="stars"></div>
@@ -2966,6 +2966,7 @@
     from.classList.add('leaving');
     to.classList.add('active');
 
+    onSceneLeave(cur);
     onSceneActivate(n);
 
     setTimeout(() => { from.classList.remove('leaving'); busy = false; }, 1300);
@@ -3025,7 +3026,7 @@
         btn.addEventListener('animationend', () => btn.classList.remove('pulse-hint'), { once: true });
       }, 3200);
       // Deferred to scene activation (see slideshow-video) rather than page load.
-      el('title-video').play().catch(() => {});
+      loadAndPlayVideo('title-video');
     }
     if (n === 9)  initSort();
     if (n === 13) initTap();
@@ -3036,6 +3037,14 @@
     if (n === 25) initChase();
     if (n === 27) initFA();
     if (n === 28) animateConclusionBadges();
+  }
+
+  // Releases video decode buffers once a scene is no longer the one showing,
+  // so a video left looping on, say, scene 2 doesn't keep consuming memory
+  // for the rest of the session after the user has moved on past it.
+  function onSceneLeave(n) {
+    if (n === 1) unloadVideo('slideshow-video');
+    if (n === 2) unloadVideo('title-video');
   }
 
   // ──────────────────────────────────────────────
@@ -3877,6 +3886,25 @@
   // and haven't all been shown yet.
   const CONTINUE_AFTER_SLIDES = 6;
 
+  // Looping video keeps an active decode pipeline running for as long as
+  // it has a source — including on scenes the user moved past long ago,
+  // since every scene stays mounted (just opacity-toggled), never removed.
+  // Load on activation, unload on leaving, rather than just deferring the
+  // initial load — otherwise this is one more thing quietly competing for
+  // memory for the rest of the session.
+  function loadAndPlayVideo(id) {
+    const v = el(id);
+    if (!v.getAttribute('src') && v.dataset.src) v.src = v.dataset.src;
+    v.play().catch(() => {});
+  }
+  function unloadVideo(id) {
+    const v = el(id);
+    if (!v.getAttribute('src')) return;
+    v.pause();
+    v.removeAttribute('src');
+    v.load();
+  }
+
   function startSlideshow() {
     setInterval(advanceSlide, SLIDE_MS);
     // Timed relative to when the slideshow actually starts (not page load),
@@ -3888,7 +3916,7 @@
     // The video is the last slide (~27s in) — start it loading now, on scene
     // activation, rather than at page load, so it isn't competing for memory
     // and bandwidth with everything else in the first seconds on the page.
-    el('slideshow-video').play().catch(() => {});
+    loadAndPlayVideo('slideshow-video');
   }
 
   function advanceSlide() {
