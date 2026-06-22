@@ -1870,7 +1870,7 @@
 
 <!-- Scene 7: A sudden eruption — paired with the user's CME photo -->
 <section class="scene" id="scene-7">
-  <img class="scene-photo" src="assets/images/Magnificent_CME_Erupts_on_the_Sun_Wikimedia_Commons.jpg"
+  <img class="scene-photo" data-src="assets/images/Magnificent_CME_Erupts_on_the_Sun_Wikimedia_Commons.jpg"
        alt="A coronal mass ejection erupting from the Sun's surface">
   <div class="dim-overlay"></div>
 
@@ -2447,15 +2447,15 @@
 
     <div class="match-panels">
       <div class="match-panel" data-drop-id="green">
-        <img class="match-photo" src="assets/images/Maardu_Northern_lights_Estonia_2022-green.jpg" alt="Green aurora over the coast in Estonia">
+        <img class="match-photo" data-src="assets/images/Maardu_Northern_lights_Estonia_2022-green.jpg" alt="Green aurora over the coast in Estonia">
         <div class="match-caption" id="match-caption-green"></div>
       </div>
       <div class="match-panel" data-drop-id="purple">
-        <img class="match-photo" src="assets/images/G5_aurora_over_Tuntorp_Lysekil_Municipality_15-purple.jpg" alt="Purple and violet aurora over trees in Sweden">
+        <img class="match-photo" data-src="assets/images/G5_aurora_over_Tuntorp_Lysekil_Municipality_15-purple.jpg" alt="Purple and violet aurora over trees in Sweden">
         <div class="match-caption" id="match-caption-purple"></div>
       </div>
       <div class="match-panel" data-drop-id="red">
-        <img class="match-photo photo-pano-red" src="assets/images/Aurora_australis_panorama-red.jpg" alt="Red aurora australis over a hillside">
+        <img class="match-photo photo-pano-red" data-src="assets/images/Aurora_australis_panorama-red.jpg" alt="Red aurora australis over a hillside">
         <div class="match-caption" id="match-caption-red"></div>
       </div>
     </div>
@@ -2948,6 +2948,29 @@
 
   function el(id) { return document.getElementById(id); }
 
+  // Generic deferred-asset loading, applied to every scene transition.
+  // Markup carries the real URL in data-src / data-bg permanently (never
+  // removed), and src / background-image are only present while that scene
+  // is the current or destination one — so a scene's photos decode into
+  // memory on arrival and are released the moment it's left behind, no
+  // matter how long the session runs or how many scenes have been visited.
+  function loadSceneAssets(n) {
+    const scene = el('scene-' + n);
+    if (!scene) return;
+    scene.querySelectorAll('img[data-src]').forEach(img => {
+      if (!img.getAttribute('src')) img.src = img.dataset.src;
+    });
+    scene.querySelectorAll('[data-bg]').forEach(div => {
+      if (!div.style.backgroundImage) div.style.backgroundImage = "url('" + div.dataset.bg + "')";
+    });
+  }
+  function unloadSceneAssets(n) {
+    const scene = el('scene-' + n);
+    if (!scene) return;
+    scene.querySelectorAll('img[data-src]').forEach(img => img.removeAttribute('src'));
+    scene.querySelectorAll('[data-bg]').forEach(div => { div.style.backgroundImage = ''; });
+  }
+
   function goTo(n) {
     if (busy || n === cur || n < 0 || n >= TOTAL) return;
     busy = true;
@@ -2959,7 +2982,9 @@
     from.classList.add('leaving');
     to.classList.add('active');
 
+    loadSceneAssets(n);
     onSceneLeave(cur);
+    unloadSceneAssets(cur);
     onSceneActivate(n);
 
     setTimeout(() => { from.classList.remove('leaving'); busy = false; }, 1300);
@@ -3061,14 +3086,8 @@
   // CONCLUSION — staggered badge reveal
   // ──────────────────────────────────────────────
   function animateConclusionBadges() {
-    // Background photos load now, on scene activation, not at page load —
-    // this is the very last scene in the module, so there's no reason for
-    // its photos to compete with everything else for memory before this.
-    document.querySelectorAll('#scene-28 .conclusion-photo[data-bg]').forEach(div => {
-      div.style.backgroundImage = "url('" + div.dataset.bg + "')";
-      div.removeAttribute('data-bg');
-    });
-
+    // Background photos load via the generic loadSceneAssets() call inside
+    // goTo() — see the note there.
     const badges = [...document.querySelectorAll('#conclusion-badges .c-badge')];
     const line   = el('conclusion-line');
     const btn    = el('btn-credits');
@@ -3844,13 +3863,9 @@
       if (audio.volume >= 0.28) clearInterval(fade);
     }, 80);
 
-    // Slideshow photos load now, not at page load — same reasoning as the
-    // deferred videos: nothing decodes into memory before it's actually needed.
-    document.querySelectorAll('#scene-1 .slide img[data-src]').forEach(img => {
-      img.src = img.dataset.src;
-      img.removeAttribute('data-src');
-    });
-
+    // Slideshow photos load via the generic loadSceneAssets() call inside
+    // goTo() below — same reasoning as the deferred videos: nothing decodes
+    // into memory before it's actually needed.
     goTo(1);
     setTimeout(startSlideshow, 1100);
   }
