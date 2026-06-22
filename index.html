@@ -1104,6 +1104,34 @@
     }
 
     /* ================================================================
+       ACCESSIBLE DRAG & DROP (shared engine + styles)
+       Used by the Quiet/Stormy sort and the Name That Color match.
+       Pointer Events drive the drag gesture (works for mouse + touch,
+       unlike the native HTML5 DnD API, which has poor touch support).
+       A parallel keyboard path (space/enter to grab, arrows to choose
+       a target, enter to drop, escape to cancel) makes it accessible.
+    ================================================================ */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .drag-item {
+      touch-action: none;
+      cursor: grab;
+      user-select: none; -webkit-user-select: none;
+    }
+    .drag-item:active { cursor: grabbing; }
+    .drag-item:focus-visible {
+      outline: 2px solid var(--teal); outline-offset: 3px;
+    }
+    .drag-item.grabbed {
+      cursor: grabbing;
+      box-shadow: 0 10px 28px rgba(0,0,0,.5);
+      transform: scale(1.04);
+    }
+
+    /* ================================================================
        PART 1 — KC: QUIET SUN / STORMY SUN SORTING
     ================================================================ */
     .sort-scene {
@@ -1142,16 +1170,10 @@
       border-radius: 8px;
       padding: 12px 14px;
       max-width: 200px;
-      cursor: pointer;
       transition: all var(--t-fast);
       text-align: left;
     }
     .sort-card:hover { border-color: rgba(255,255,255,.45); background: rgba(255,255,255,.08); }
-    .sort-card.selected {
-      border-color: var(--teal);
-      background: rgba(0,220,210,.12);
-      box-shadow: 0 0 0 1px rgba(0,220,210,.3);
-    }
     .sort-buckets {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 14px; max-width: 480px; margin: 0 auto;
@@ -1162,10 +1184,8 @@
       border: 2px dashed rgba(255,255,255,.3);
       background: rgba(255,255,255,.02);
       color: var(--text-primary);
-      cursor: pointer;
       transition: all var(--t-fast);
     }
-    .sort-bucket:hover { border-color: rgba(255,255,255,.55); }
     .bucket-title {
       font-size: 1rem; letter-spacing: .05em;
       margin-bottom: 4px; color: var(--text-bright);
@@ -1174,6 +1194,25 @@
       font-family: 'Inter', sans-serif;
       font-size: .74rem; color: var(--text-secondary);
       text-transform: none; letter-spacing: 0;
+    }
+    .sort-bucket.drag-over,
+    .sort-bucket.drag-candidate {
+      border-color: var(--teal); border-style: solid;
+      background: rgba(0,220,210,.08);
+    }
+    .bucket-placed {
+      display: flex; flex-direction: column; gap: 6px;
+      margin-top: 12px;
+    }
+    .bucket-placed-chip {
+      font-family: 'Inter', sans-serif;
+      font-size: .76rem; line-height: 1.4;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 6px;
+      padding: 6px 9px;
+      text-align: left;
     }
     .sort-bucket.flash-correct {
       border-color: var(--green); border-style: solid;
@@ -1230,12 +1269,14 @@
       position: relative;
       flex: 1; overflow: hidden;
       border: none; border-radius: 6px;
-      padding: 0; cursor: pointer;
+      padding: 0;
       background: none;
       transition: flex .4s ease, outline-color var(--t-fast);
       outline: 2px solid transparent; outline-offset: 2px;
     }
     .match-panel:hover { flex: 1.08; }
+    .match-panel.drag-over,
+    .match-panel.drag-candidate { outline-color: var(--teal); }
     .match-photo {
       position: absolute; inset: 0;
       width: 100%; height: 100%; object-fit: cover;
@@ -1549,6 +1590,9 @@
   </style>
 </head>
 <body>
+
+<!-- Shared live region for the accessible drag-and-drop activities -->
+<div id="dnd-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
 <!-- ====================================================
      AUDIO — starts on user click (browser autoplay policy)
@@ -1874,19 +1918,21 @@
   <div class="sort-scene">
     <div class="sort-eyebrow">Part 1 — Knowledge Check</div>
     <h3 class="sort-prompt">Quiet Sun or Stormy Sun?</h3>
-    <p class="sort-instructions">Tap a card, then tap the bucket where it belongs.</p>
+    <p class="sort-instructions">Drag each card to the bucket where it belongs. Or press Space or Enter on a card, use the arrow keys to choose a bucket, then press Enter to drop it.</p>
 
     <div class="sort-deck" id="sort-deck"></div>
 
     <div class="sort-buckets">
-      <button class="sort-bucket" data-bucket="quiet" onclick="assignBucket('quiet')">
+      <div class="sort-bucket" data-drop-id="quiet">
         <div class="bucket-title">Quiet Sun</div>
         <div class="bucket-sub">calm, steady</div>
-      </button>
-      <button class="sort-bucket" data-bucket="stormy" onclick="assignBucket('stormy')">
+        <div class="bucket-placed" id="bucket-placed-quiet"></div>
+      </div>
+      <div class="sort-bucket" data-drop-id="stormy">
         <div class="bucket-title">Stormy Sun</div>
         <div class="bucket-sub">active, eruptive</div>
-      </button>
+        <div class="bucket-placed" id="bucket-placed-stormy"></div>
+      </div>
     </div>
 
     <div class="sort-complete" id="sort-complete">
@@ -2386,23 +2432,23 @@
   <div class="match-scene">
     <div class="section-eyebrow">Part 3 — Knowledge Check</div>
     <h2 class="section-headline" style="margin-bottom:8px;">Name That Color</h2>
-    <p class="match-instructions">Select a cause below, then tap the photo it explains.</p>
+    <p class="match-instructions">Drag each label onto the photo it explains. Or press Space or Enter on a label, use the arrow keys to choose a photo, then press Enter to drop it.</p>
 
     <div class="match-deck" id="match-deck"></div>
 
     <div class="match-panels">
-      <button class="match-panel" data-color="green" onclick="placeColor('green')">
+      <div class="match-panel" data-drop-id="green">
         <img class="match-photo" src="assets/images/Maardu_Northern_lights_Estonia_2022-green.jpg" alt="Green aurora over the coast in Estonia">
         <div class="match-caption" id="match-caption-green"></div>
-      </button>
-      <button class="match-panel" data-color="purple" onclick="placeColor('purple')">
+      </div>
+      <div class="match-panel" data-drop-id="purple">
         <img class="match-photo" src="assets/images/G5_aurora_over_Tuntorp_Lysekil_Municipality_15-purple.jpg" alt="Purple and violet aurora over trees in Sweden">
         <div class="match-caption" id="match-caption-purple"></div>
-      </button>
-      <button class="match-panel" data-color="red" onclick="placeColor('red')">
+      </div>
+      <div class="match-panel" data-drop-id="red">
         <img class="match-photo photo-pano-red" src="assets/images/Aurora_australis_panorama-red.jpg" alt="Red aurora australis over a hillside">
         <div class="match-caption" id="match-caption-red"></div>
-      </button>
+      </div>
     </div>
 
     <div class="match-complete" id="match-complete">
@@ -3446,6 +3492,140 @@
   function restartChase() { initChase(); }
 
   // ──────────────────────────────────────────────
+  // ACCESSIBLE DRAG & DROP ENGINE
+  // Shared by the Quiet/Stormy sort and Name That Color match.
+  //
+  // Pointer Events drive the visible drag gesture (mouse + touch in one
+  // code path — the native HTML5 draggable/dragstart API is unreliable
+  // on touch, which is exactly the platform this needs to work on).
+  //
+  // A parallel keyboard path makes it fully usable without a pointer:
+  // Space/Enter on a focused [data-drag-id] picks it up, arrow keys cycle
+  // a "candidate" target among the [data-drop-id] elements inside the same
+  // root, Space/Enter again commits the drop, Escape cancels. Focus never
+  // leaves the source item — the candidate target is just a logical
+  // pointer, announced through a shared aria-live region.
+  // ──────────────────────────────────────────────
+  function initDragDrop(root, { onDrop, describeItem, describeTarget }) {
+    let grabbed = null;     // { id, el, mode: 'pointer' | 'keyboard' }
+    let candidateIdx = 0;
+    let pointerOffset = null;
+
+    function targets() {
+      return [...root.querySelectorAll('[data-drop-id]')];
+    }
+    function announce(msg) {
+      const lr = document.getElementById('dnd-live-region');
+      if (lr) lr.textContent = msg;
+    }
+    function resetPointerVisual(itemEl) {
+      itemEl.classList.remove('grabbed');
+      itemEl.style.position = '';
+      itemEl.style.left = '';
+      itemEl.style.top = '';
+      itemEl.style.width = '';
+      itemEl.style.zIndex = '';
+      itemEl.style.pointerEvents = '';
+    }
+
+    root.addEventListener('pointerdown', e => {
+      const item = e.target.closest('[data-drag-id]');
+      if (!item) return;
+      e.preventDefault();
+      item.setPointerCapture(e.pointerId);
+      const rect = item.getBoundingClientRect();
+      pointerOffset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      item.style.width = rect.width + 'px';
+      grabbed = { id: item.dataset.dragId, el: item, mode: 'pointer' };
+      item.classList.add('grabbed');
+      item.style.zIndex = 999;
+    });
+
+    root.addEventListener('pointermove', e => {
+      if (!grabbed || grabbed.mode !== 'pointer') return;
+      const itemEl = grabbed.el;
+      itemEl.style.position = 'fixed';
+      itemEl.style.left = (e.clientX - pointerOffset.x) + 'px';
+      itemEl.style.top  = (e.clientY - pointerOffset.y) + 'px';
+      itemEl.style.pointerEvents = 'none';
+
+      targets().forEach(t => t.classList.remove('drag-over'));
+      const under = document.elementFromPoint(e.clientX, e.clientY);
+      const target = under && under.closest('[data-drop-id]');
+      if (target) target.classList.add('drag-over');
+    });
+
+    function endPointerDrag(e) {
+      if (!grabbed || grabbed.mode !== 'pointer') return;
+      const itemEl = grabbed.el;
+      const under = document.elementFromPoint(e.clientX, e.clientY);
+      const target = under && under.closest('[data-drop-id]');
+      targets().forEach(t => t.classList.remove('drag-over'));
+      resetPointerVisual(itemEl);
+      const droppedId = grabbed.id;
+      grabbed = null;
+      if (target) onDrop(droppedId, target.dataset.dropId);
+    }
+    root.addEventListener('pointerup', endPointerDrag);
+    root.addEventListener('pointercancel', endPointerDrag);
+
+    root.addEventListener('keydown', e => {
+      const item = e.target.closest('[data-drag-id]');
+
+      if (!grabbed && item && (e.key === ' ' || e.key === 'Enter')) {
+        e.preventDefault();
+        e.stopPropagation();
+        grabbed = { id: item.dataset.dragId, el: item, mode: 'keyboard' };
+        candidateIdx = 0;
+        item.classList.add('grabbed');
+        const ts = targets();
+        if (ts.length) ts[0].classList.add('drag-candidate');
+        announce('Picked up ' + describeItem(item.dataset.dragId) +
+          '. Use the arrow keys to choose where it goes, then press Enter to drop it. Press Escape to cancel. ' +
+          (ts.length ? describeTarget(ts[0].dataset.dropId) : ''));
+        return;
+      }
+
+      if (!grabbed || grabbed.mode !== 'keyboard') return;
+      const ts = targets();
+      if (!ts.length) return;
+
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.stopPropagation();
+        ts[candidateIdx].classList.remove('drag-candidate');
+        candidateIdx = (candidateIdx + 1) % ts.length;
+        ts[candidateIdx].classList.add('drag-candidate');
+        announce(describeTarget(ts[candidateIdx].dataset.dropId));
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        e.stopPropagation();
+        ts[candidateIdx].classList.remove('drag-candidate');
+        candidateIdx = (candidateIdx - 1 + ts.length) % ts.length;
+        ts[candidateIdx].classList.add('drag-candidate');
+        announce(describeTarget(ts[candidateIdx].dataset.dropId));
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.stopPropagation();
+        const target = ts[candidateIdx];
+        const droppedId = grabbed.id;
+        const itemEl = grabbed.el;
+        ts.forEach(t => t.classList.remove('drag-candidate'));
+        itemEl.classList.remove('grabbed');
+        grabbed = null;
+        onDrop(droppedId, target.dataset.dropId);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        ts.forEach(t => t.classList.remove('drag-candidate'));
+        grabbed.el.classList.remove('grabbed');
+        announce('Cancelled. ' + describeItem(grabbed.id) + ' is back in the list.');
+        grabbed = null;
+      }
+    });
+  }
+
+  // ──────────────────────────────────────────────
   // PART 1 — SCENE 7: QUIET SUN / STORMY SUN SORTING
   // ──────────────────────────────────────────────
   const SORT_ITEMS = [
@@ -3456,17 +3636,18 @@
     { text: 'A powerful solar flare erupts from an active region.', bucket: 'stormy' },
     { text: 'Weeks pass without a notable eruption.', bucket: 'quiet' }
   ];
+  const SORT_BUCKET_NAMES = { quiet: 'Quiet Sun, calm and steady', stormy: 'Stormy Sun, active and eruptive' };
 
-  let sortSelected = null;
   let sortSolved = [];
 
   function initSort() {
-    sortSelected = null;
     sortSolved = new Array(SORT_ITEMS.length).fill(false);
     el('sort-complete').classList.remove('visible');
     document.querySelectorAll('#scene-9 .sort-bucket').forEach(b => {
       b.classList.remove('flash-correct', 'flash-wrong');
     });
+    el('bucket-placed-quiet').innerHTML = '';
+    el('bucket-placed-stormy').innerHTML = '';
     renderSortDeck();
   }
 
@@ -3474,35 +3655,38 @@
     const deck = el('sort-deck');
     deck.innerHTML = SORT_ITEMS.map((item, i) => {
       if (sortSolved[i]) return '';
-      return '<button class="sort-card' + (sortSelected === i ? ' selected' : '') +
-             '" onclick="selectCard(' + i + ')">' + item.text + '</button>';
+      return '<button class="sort-card drag-item" data-drag-id="' + i + '" tabindex="0">' + item.text + '</button>';
     }).join('');
   }
 
-  function selectCard(i) {
-    sortSelected = (sortSelected === i) ? null : i;
-    renderSortDeck();
-  }
+  function handleSortDrop(dragId, dropId) {
+    const i = parseInt(dragId, 10);
+    const item = SORT_ITEMS[i];
+    const bucketEl = document.querySelector('#scene-9 .sort-bucket[data-drop-id="' + dropId + '"]');
 
-  function assignBucket(bucket) {
-    if (sortSelected === null) return;
-    const item = SORT_ITEMS[sortSelected];
-    const btn  = document.querySelector('#scene-9 .sort-bucket[data-bucket="' + bucket + '"]');
-
-    if (item.bucket === bucket) {
-      sortSolved[sortSelected] = true;
-      sortSelected = null;
-      btn.classList.add('flash-correct');
-      setTimeout(() => btn.classList.remove('flash-correct'), 500);
+    if (item.bucket === dropId) {
+      sortSolved[i] = true;
+      bucketEl.classList.add('flash-correct');
+      setTimeout(() => bucketEl.classList.remove('flash-correct'), 500);
+      const chip = document.createElement('div');
+      chip.className = 'bucket-placed-chip';
+      chip.textContent = item.text;
+      el('bucket-placed-' + dropId).appendChild(chip);
       renderSortDeck();
       if (sortSolved.every(s => s)) {
         setTimeout(() => el('sort-complete').classList.add('visible'), 400);
       }
     } else {
-      btn.classList.add('flash-wrong');
-      setTimeout(() => btn.classList.remove('flash-wrong'), 500);
+      bucketEl.classList.add('flash-wrong');
+      setTimeout(() => bucketEl.classList.remove('flash-wrong'), 500);
     }
   }
+
+  initDragDrop(document.getElementById('scene-9'), {
+    onDrop: handleSortDrop,
+    describeItem: id => SORT_ITEMS[parseInt(id, 10)].text,
+    describeTarget: id => SORT_BUCKET_NAMES[id],
+  });
 
   // ──────────────────────────────────────────────
   // PART 2 — SCENE 14: TAP-THE-MAGNETOSPHERE
@@ -3542,12 +3726,11 @@
     { color: 'red',    text: 'Oxygen, 200 km and up', sub: 'Thin air, slow glow' },
     { color: 'purple', text: 'Nitrogen, ~80–120 km', sub: 'The dense lower edge' }
   ];
+  const MATCH_PANEL_NAMES = { green: 'the green photo', red: 'the red photo', purple: 'the purple photo' };
 
-  let matchSelected = null;
   let matchSolved = {};
 
   function initMatch() {
-    matchSelected = null;
     matchSolved = {};
     el('match-complete').classList.remove('visible');
     document.querySelectorAll('#scene-18 .match-panel').forEach(p => p.classList.remove('solved', 'wrong'));
@@ -3559,26 +3742,19 @@
     const deck = el('match-deck');
     deck.innerHTML = MATCH_ITEMS.map((item, i) => {
       if (matchSolved[item.color]) return '';
-      return '<button class="sort-card' + (matchSelected === i ? ' selected' : '') +
-             '" onclick="selectMatchChip(' + i + ')">' + item.text + '</button>';
+      return '<button class="sort-card drag-item" data-drag-id="' + i + '" tabindex="0">' + item.text + '</button>';
     }).join('');
   }
 
-  function selectMatchChip(i) {
-    matchSelected = (matchSelected === i) ? null : i;
-    renderMatchDeck();
-  }
+  function handleMatchDrop(dragId, dropId) {
+    const i = parseInt(dragId, 10);
+    const item  = MATCH_ITEMS[i];
+    const panel = document.querySelector('#scene-18 .match-panel[data-drop-id="' + dropId + '"]');
 
-  function placeColor(color) {
-    if (matchSelected === null) return;
-    const item  = MATCH_ITEMS[matchSelected];
-    const panel = document.querySelector('#scene-18 .match-panel[data-color="' + color + '"]');
-
-    if (item.color === color) {
-      matchSolved[color] = true;
-      matchSelected = null;
+    if (item.color === dropId) {
+      matchSolved[dropId] = true;
       panel.classList.add('solved');
-      el('match-caption-' + color).innerHTML =
+      el('match-caption-' + dropId).innerHTML =
         '<div class="match-caption-title">' + item.text + '</div><div class="match-caption-sub">' + item.sub + '</div>';
       renderMatchDeck();
       if (Object.keys(matchSolved).length === MATCH_ITEMS.length) {
@@ -3589,6 +3765,12 @@
       setTimeout(() => panel.classList.remove('wrong'), 500);
     }
   }
+
+  initDragDrop(document.getElementById('scene-18'), {
+    onDrop: handleMatchDrop,
+    describeItem: id => MATCH_ITEMS[parseInt(id, 10)].text,
+    describeTarget: id => MATCH_PANEL_NAMES[id],
+  });
 
   // ──────────────────────────────────────────────
   // KEYBOARD + DOT NAVIGATION
