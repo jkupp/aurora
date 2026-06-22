@@ -1693,13 +1693,7 @@
     <img data-src="assets/images/pexels-sandyco-24264264.jpg" alt="Aurora over landscape">
   </div>
   <div class="slide">
-    <img data-src="assets/images/GSFC_20171208_Archive_e000760~orig.jpg" alt="Aurora borealis, NASA archive">
-  </div>
-  <div class="slide">
     <img data-src="assets/images/pexels-funky-fresh-traveles-1357219379-26646276.jpg" alt="Aurora curtains in night sky">
-  </div>
-  <div class="slide">
-    <img data-src="assets/images/GSFC_20171208_Archive_e001655~orig.jpg" alt="Aurora from above, NASA archive">
   </div>
   <div class="slide">
     <img data-src="assets/images/iceland-2025.JPG" alt="Aurora photographed by the author in Iceland, 2025">
@@ -2888,7 +2882,6 @@
           <li><a href="https://commons.wikimedia.org/wiki/File:Aurora_australis_panorama.jpg" target="_blank" rel="noopener">flagstaffotos@gmail.com</a></li>
           <li><a href="https://commons.wikimedia.org/wiki/File:Maardu_Northern_lights_%E2%80%94_Estonia,_2022.jpg" target="_blank" rel="noopener">Maxim Bilovitskiy</a></li>
           <li><a href="https://commons.wikimedia.org/wiki/File:G5_aurora_over_Tuntorp,_Lysekil_Municipality_15.jpg" target="_blank" rel="noopener">W.carter</a></li>
-          <li><a href="https://images.nasa.gov/details/GSFC_20171208_Archive_e000760" target="_blank" rel="noopener">Sebastian Saarloos</a></li>
           <li><a href="https://images.nasa.gov/details/GSFC_20171208_Archive_e001655" target="_blank" rel="noopener">Joseph Bradley</a></li>
           <li><a href="https://www.pexels.com/photo/stunning-northern-lights-over-estonian-coastline-34540965/" target="_blank" rel="noopener">Evelin Magnus</a></li>
           <li><a href="https://www.pexels.com/photo/photo-of-bright-northern-lights-24264264/" target="_blank" rel="noopener">Sandrine Cornille</a></li>
@@ -3881,10 +3874,8 @@
   const slides = document.querySelectorAll('.slide');
   let slideIdx = 0;
   const SLIDE_MS = 4600;
-  // Continue button timing is pinned to the original 6-slide sequence so it
-  // always appears at the same moment, even if more slides are added later
-  // and haven't all been shown yet.
-  const CONTINUE_AFTER_SLIDES = 6;
+  // Continue button appears once the 4 photos have each had a turn.
+  const CONTINUE_AFTER_SLIDES = 4;
 
   // Looping video keeps an active decode pipeline running for as long as
   // it has a source — including on scenes the user moved past long ago,
