@@ -1125,10 +1125,25 @@
     .drag-item:focus-visible {
       outline: 2px solid var(--teal); outline-offset: 3px;
     }
+    /* Keyboard-grabbed state: no ghost involved, so the item itself lifts. */
     .drag-item.grabbed {
       cursor: grabbing;
       box-shadow: 0 10px 28px rgba(0,0,0,.5);
       transform: scale(1.04);
+    }
+    /* Pointer-drag state: the item stays put as a faded placeholder while
+       a cloned .drag-ghost (appended to <body>) does the visual following. */
+    .drag-item.drag-source-active {
+      opacity: .35;
+    }
+    .drag-ghost {
+      position: fixed;
+      z-index: 999;
+      pointer-events: none;
+      cursor: grabbing;
+      box-shadow: 0 10px 28px rgba(0,0,0,.5);
+      transform: scale(1.04);
+      margin: 0;
     }
 
     /* ================================================================
@@ -1672,22 +1687,22 @@
 <section class="scene" id="scene-1">
 
   <div class="slide active">
-    <img src="assets/images/pexels-evelin-34540965.jpg" alt="Aurora borealis">
+    <img data-src="assets/images/pexels-evelin-34540965.jpg" alt="Aurora borealis">
   </div>
   <div class="slide">
-    <img src="assets/images/pexels-sandyco-24264264.jpg" alt="Aurora over landscape">
+    <img data-src="assets/images/pexels-sandyco-24264264.jpg" alt="Aurora over landscape">
   </div>
   <div class="slide">
-    <img src="assets/images/GSFC_20171208_Archive_e000760~orig.jpg" alt="Aurora borealis, NASA archive">
+    <img data-src="assets/images/GSFC_20171208_Archive_e000760~orig.jpg" alt="Aurora borealis, NASA archive">
   </div>
   <div class="slide">
-    <img src="assets/images/pexels-funky-fresh-traveles-1357219379-26646276.jpg" alt="Aurora curtains in night sky">
+    <img data-src="assets/images/pexels-funky-fresh-traveles-1357219379-26646276.jpg" alt="Aurora curtains in night sky">
   </div>
   <div class="slide">
-    <img src="assets/images/GSFC_20171208_Archive_e001655~orig.jpg" alt="Aurora from above, NASA archive">
+    <img data-src="assets/images/GSFC_20171208_Archive_e001655~orig.jpg" alt="Aurora from above, NASA archive">
   </div>
   <div class="slide">
-    <img src="assets/images/iceland-2025.JPG" alt="Aurora photographed by the author in Iceland, 2025">
+    <img data-src="assets/images/iceland-2025.JPG" alt="Aurora photographed by the author in Iceland, 2025">
   </div>
   <div class="slide">
     <!-- VIDEO SLIDE — swap for your best timelapse once reviewed -->
@@ -2803,10 +2818,10 @@
 ==================================================== -->
 <section class="scene" id="scene-28">
   <div class="conclusion-bg">
-    <div class="conclusion-photo" style="background-image:url('assets/images/pexels-evelin-34540965.jpg'); animation-delay:0s;"></div>
-    <div class="conclusion-photo" style="background-image:url('assets/images/GSFC_20171208_Archive_e001655~orig.jpg'); animation-delay:-9s;"></div>
-    <div class="conclusion-photo" style="background-image:url('assets/images/pexels-sandyco-24264264.jpg'); animation-delay:-18s;"></div>
-    <div class="conclusion-photo" style="background-image:url('assets/images/iceland-2025.JPG'); animation-delay:-27s;"></div>
+    <div class="conclusion-photo" data-bg="assets/images/pexels-evelin-34540965.jpg" style="animation-delay:0s;"></div>
+    <div class="conclusion-photo" data-bg="assets/images/GSFC_20171208_Archive_e001655~orig.jpg" style="animation-delay:-9s;"></div>
+    <div class="conclusion-photo" data-bg="assets/images/pexels-sandyco-24264264.jpg" style="animation-delay:-18s;"></div>
+    <div class="conclusion-photo" data-bg="assets/images/iceland-2025.JPG" style="animation-delay:-27s;"></div>
   </div>
   <div class="dim-overlay"></div>
 
@@ -3044,6 +3059,14 @@
   // CONCLUSION — staggered badge reveal
   // ──────────────────────────────────────────────
   function animateConclusionBadges() {
+    // Background photos load now, on scene activation, not at page load —
+    // this is the very last scene in the module, so there's no reason for
+    // its photos to compete with everything else for memory before this.
+    document.querySelectorAll('#scene-28 .conclusion-photo[data-bg]').forEach(div => {
+      div.style.backgroundImage = "url('" + div.dataset.bg + "')";
+      div.removeAttribute('data-bg');
+    });
+
     const badges = [...document.querySelectorAll('#conclusion-badges .c-badge')];
     const line   = el('conclusion-line');
     const btn    = el('btn-credits');
@@ -3510,6 +3533,7 @@
     let grabbed = null;     // { id, el, mode: 'pointer' | 'keyboard' }
     let candidateIdx = 0;
     let pointerOffset = null;
+    let ghost = null;       // body-attached drag visual (see note below)
 
     function targets() {
       return [...root.querySelectorAll('[data-drop-id]')];
@@ -3517,15 +3541,6 @@
     function announce(msg) {
       const lr = document.getElementById('dnd-live-region');
       if (lr) lr.textContent = msg;
-    }
-    function resetPointerVisual(itemEl) {
-      itemEl.classList.remove('grabbed');
-      itemEl.style.position = '';
-      itemEl.style.left = '';
-      itemEl.style.top = '';
-      itemEl.style.width = '';
-      itemEl.style.zIndex = '';
-      itemEl.style.pointerEvents = '';
     }
 
     root.addEventListener('pointerdown', e => {
@@ -3535,22 +3550,34 @@
       item.setPointerCapture(e.pointerId);
       const rect = item.getBoundingClientRect();
       pointerOffset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-      item.style.width = rect.width + 'px';
       grabbed = { id: item.dataset.dragId, el: item, mode: 'pointer' };
-      item.classList.add('grabbed');
-      item.style.zIndex = 999;
+      item.classList.add('drag-source-active');
+
+      // The drag visual is a clone appended directly to <body>, not the
+      // dragged element itself moved to position:fixed in place. Several
+      // ancestors in this page (any element with the scene-fadein animation,
+      // which ends on a "transform: translateY(0)" held by fill-mode: both)
+      // establish their own containing block for fixed-position descendants,
+      // which would otherwise offset the drag visual by that ancestor's own
+      // position on screen instead of tracking the pointer.
+      ghost = item.cloneNode(true);
+      ghost.classList.add('drag-ghost');
+      ghost.style.width = rect.width + 'px';
+      ghost.style.height = rect.height + 'px';
+      ghost.style.left = rect.left + 'px';
+      ghost.style.top = rect.top + 'px';
+      document.body.appendChild(ghost);
     });
 
     root.addEventListener('pointermove', e => {
-      if (!grabbed || grabbed.mode !== 'pointer') return;
-      const itemEl = grabbed.el;
-      itemEl.style.position = 'fixed';
-      itemEl.style.left = (e.clientX - pointerOffset.x) + 'px';
-      itemEl.style.top  = (e.clientY - pointerOffset.y) + 'px';
-      itemEl.style.pointerEvents = 'none';
+      if (!grabbed || grabbed.mode !== 'pointer' || !ghost) return;
+      ghost.style.left = (e.clientX - pointerOffset.x) + 'px';
+      ghost.style.top  = (e.clientY - pointerOffset.y) + 'px';
 
       targets().forEach(t => t.classList.remove('drag-over'));
+      ghost.style.display = 'none';
       const under = document.elementFromPoint(e.clientX, e.clientY);
+      ghost.style.display = '';
       const target = under && under.closest('[data-drop-id]');
       if (target) target.classList.add('drag-over');
     });
@@ -3558,10 +3585,14 @@
     function endPointerDrag(e) {
       if (!grabbed || grabbed.mode !== 'pointer') return;
       const itemEl = grabbed.el;
+      itemEl.classList.remove('drag-source-active');
+      if (ghost) { ghost.remove(); ghost = null; }
+
+      // The ghost is gone from the DOM now, so this naturally hits whatever
+      // is actually under the pointer (deck cards, buckets, photo panels).
       const under = document.elementFromPoint(e.clientX, e.clientY);
       const target = under && under.closest('[data-drop-id]');
       targets().forEach(t => t.classList.remove('drag-over'));
-      resetPointerVisual(itemEl);
       const droppedId = grabbed.id;
       grabbed = null;
       if (target) onDrop(droppedId, target.dataset.dropId);
@@ -3810,6 +3841,13 @@
       audio.volume = Math.min(audio.volume + 0.012, 0.28);
       if (audio.volume >= 0.28) clearInterval(fade);
     }, 80);
+
+    // Slideshow photos load now, not at page load — same reasoning as the
+    // deferred videos: nothing decodes into memory before it's actually needed.
+    document.querySelectorAll('#scene-1 .slide img[data-src]').forEach(img => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
 
     goTo(1);
     setTimeout(startSlideshow, 1100);
