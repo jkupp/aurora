@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Aurora Borealis: A Beautiful Mystery in the Sky</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,6 +171,7 @@
     .scene {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh;
+      height: 100dvh; /* iOS/iPadOS toolbars resize the real viewport; 100vh overshoots it */
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
@@ -253,6 +254,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 28px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
       z-index: 200;
       transition: opacity var(--t-med);
     }
@@ -455,6 +457,7 @@
       align-items: flex-end;
       justify-content: flex-end;
       padding: 0 48px 28px;
+      padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
     }
 
     #btn-ss-continue {
@@ -1644,7 +1647,7 @@
   </div>
   <div class="slide">
     <!-- VIDEO SLIDE — swap for your best timelapse once reviewed -->
-    <video src="assets/video/12225760_1920_1080_30fps.mp4" autoplay muted loop playsinline></video>
+    <video id="slideshow-video" src="assets/video/12225760_1920_1080_30fps.mp4" preload="none" muted loop playsinline></video>
   </div>
 
   <div id="slideshow-footer">
@@ -1659,8 +1662,8 @@
      SWAP: replace src below when you've reviewed your clips.
 ==================================================== -->
 <section class="scene" id="scene-2">
-  <video class="scene-video" src="assets/video/12505178_1920_1080_60fps.mp4"
-         autoplay muted loop playsinline></video>
+  <video id="title-video" class="scene-video" src="assets/video/12505178_1920_1080_60fps.mp4"
+         preload="none" muted loop playsinline></video>
   <div class="vignette"></div>
   <div class="stars"></div>
 
@@ -2960,6 +2963,8 @@
         btn.classList.add('pulse-hint');
         btn.addEventListener('animationend', () => btn.classList.remove('pulse-hint'), { once: true });
       }, 3200);
+      // Deferred to scene activation (see slideshow-video) rather than page load.
+      el('title-video').play().catch(() => {});
     }
     if (n === 9)  initSort();
     if (n === 13) initTap();
@@ -3660,6 +3665,10 @@
     setTimeout(() => {
       if (cur === 1) el('btn-ss-continue').classList.add('visible');
     }, SLIDE_MS * CONTINUE_AFTER_SLIDES + 1200);
+    // The video is the last slide (~27s in) — start it loading now, on scene
+    // activation, rather than at page load, so it isn't competing for memory
+    // and bandwidth with everything else in the first seconds on the page.
+    el('slideshow-video').play().catch(() => {});
   }
 
   function advanceSlide() {
