@@ -2389,11 +2389,11 @@
 
     <div class="match-panels">
       <button class="match-panel" data-color="green" onclick="placeColor('green')">
-        <img class="match-photo" src="assets/images/Maardu_Northern_lights_—_Estonia,_2022-green.jpg" alt="Green aurora over the coast in Estonia">
+        <img class="match-photo" src="assets/images/Maardu_Northern_lights_Estonia_2022-green.jpg" alt="Green aurora over the coast in Estonia">
         <div class="match-caption" id="match-caption-green"></div>
       </button>
       <button class="match-panel" data-color="purple" onclick="placeColor('purple')">
-        <img class="match-photo" src="assets/images/G5_aurora_over_Tuntorp,_Lysekil_Municipality_15-purple.jpg" alt="Purple and violet aurora over trees in Sweden">
+        <img class="match-photo" src="assets/images/G5_aurora_over_Tuntorp_Lysekil_Municipality_15-purple.jpg" alt="Purple and violet aurora over trees in Sweden">
         <div class="match-caption" id="match-caption-purple"></div>
       </button>
       <button class="match-panel" data-color="red" onclick="placeColor('red')">
@@ -2675,7 +2675,7 @@
         <li class="warn"><span class="chk-icon">⚠</span><span>Storms that strong are essentially unpredictable more than a day or two out — not something to plan a trip around.</span></li>
         <li><span class="chk-icon">✦</span><span>If seeing the aurora matters to you, the realistic move is to travel toward it — to a mid- or high-latitude destination.</span></li>
       </ul>
-      <button class="chase-restart" onclick="restartChase()">Try another combination &nbsp;↻</button>
+      <button class="chase-restart" onclick="restartChase()">Try another latitude &nbsp;↻</button>
     </div>
 
     <div class="chase-result" id="chase-result" style="display:none;">
@@ -3654,6 +3654,12 @@
 
   function startSlideshow() {
     setInterval(advanceSlide, SLIDE_MS);
+    // Timed relative to when the slideshow actually starts (not page load),
+    // so it still fires correctly no matter how long the user lingers on
+    // the Begin screen first.
+    setTimeout(() => {
+      if (cur === 1) el('btn-ss-continue').classList.add('visible');
+    }, SLIDE_MS * CONTINUE_AFTER_SLIDES + 1200);
   }
 
   function advanceSlide() {
@@ -3668,10 +3674,6 @@
       media.style.animation = '';
     }
   }
-
-  setTimeout(() => {
-    if (cur === 1) el('btn-ss-continue').classList.add('visible');
-  }, SLIDE_MS * CONTINUE_AFTER_SLIDES + 1200);
 
   // ──────────────────────────────────────────────
   // SCENE 4 — QUESTIONS REVEAL
