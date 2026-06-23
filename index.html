@@ -1086,6 +1086,7 @@
       transition: fill .25s ease, stroke .25s ease;
     }
     .tap-zone:hover { fill: rgba(255,255,255,.1); stroke: rgba(255,255,255,.55); }
+    .tap-zone:focus-visible { fill: rgba(255,255,255,.1); stroke: var(--teal); outline: none; }
     .tap-zone.found {
       fill: rgba(80,255,140,.18);
       stroke: rgba(80,255,140,.85);
@@ -1901,7 +1902,8 @@
     </div>
 
     <div class="cycle-chart">
-      <svg viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Wave chart of the Sun's roughly 11-year activity cycle, rising to a Stormy Sun peak and falling to a Quiet Sun valley, repeating.">
         <line x1="0" y1="85" x2="480" y2="85" stroke="rgba(255,255,255,.15)" stroke-width="1" stroke-dasharray="3,3"/>
         <path d="M0,85 Q60,35 120,85 T240,85 T360,85 T480,85" fill="none" stroke="rgba(255,190,60,.85)" stroke-width="2.2"/>
 
@@ -1974,7 +1976,8 @@
     </div>
 
     <div class="cycle-chart">
-      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Diagram of the solar wind striking Earth's magnetosphere. Nested field lines deflect it around the planet, except at the north and south poles, where the lines converge and funnel the wind inward.">
         <defs>
           <g id="magnetosphere-diagram">
             <text x="14" y="16" fill="rgba(205,225,80,.9)" font-size="13" font-family="Inter, sans-serif">Solar wind</text>
@@ -2058,7 +2061,8 @@
     </div>
 
     <div class="cycle-chart">
-      <svg viewBox="-180 0 820 300" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="-180 0 820 300" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Diagram tracing one charged particle's journey: leaving the Sun, crossing 93 million miles of solar wind, meeting Earth's magnetosphere, curving along a field line to the pole, and glowing over Reykjavik.">
         <defs>
           <radialGradient id="followSun" cx="50%" cy="50%" r="50%">
             <stop offset="0%"  stop-color="#fff1c8"/>
@@ -2208,18 +2212,28 @@
     <h3 class="sort-prompt">Where Can They Enter?</h3>
     <p class="sort-instructions">
       Tap the spots where charged particles can funnel into Earth's atmosphere.
-      <span id="tap-progress">0 of 2 found</span>
+      <span id="tap-progress" aria-live="polite">0 of 2 found</span>
     </p>
 
     <div class="cycle-chart">
       <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">
-        <use href="#magnetosphere-diagram"/>
+        <use href="#magnetosphere-diagram" aria-hidden="true"/>
 
-        <circle class="tap-zone" data-correct="false" cx="90"  cy="150" r="28" onclick="tapZone(this)"/>
-        <circle class="tap-zone" data-correct="false" cx="400" cy="75"  r="28" onclick="tapZone(this)"/>
-        <circle class="tap-zone" data-correct="false" cx="400" cy="225" r="28" onclick="tapZone(this)"/>
-        <circle class="tap-zone" data-correct="true"  cx="260" cy="118" r="22" onclick="tapZone(this)"/>
-        <circle class="tap-zone" data-correct="true"  cx="260" cy="182" r="22" onclick="tapZone(this)"/>
+        <circle class="tap-zone" data-correct="false" cx="90"  cy="150" r="28"
+                tabindex="0" role="button" aria-pressed="false" aria-label="Spot near the front of the shield, facing the solar wind"
+                onclick="tapZone(this)" onkeydown="tapZoneKey(event, this)"/>
+        <circle class="tap-zone" data-correct="false" cx="400" cy="75"  r="28"
+                tabindex="0" role="button" aria-pressed="false" aria-label="Spot in the upper magnetotail, behind Earth"
+                onclick="tapZone(this)" onkeydown="tapZoneKey(event, this)"/>
+        <circle class="tap-zone" data-correct="false" cx="400" cy="225" r="28"
+                tabindex="0" role="button" aria-pressed="false" aria-label="Spot in the lower magnetotail, behind Earth"
+                onclick="tapZone(this)" onkeydown="tapZoneKey(event, this)"/>
+        <circle class="tap-zone" data-correct="true"  cx="260" cy="118" r="22"
+                tabindex="0" role="button" aria-pressed="false" aria-label="Spot just above Earth, near the north pole"
+                onclick="tapZone(this)" onkeydown="tapZoneKey(event, this)"/>
+        <circle class="tap-zone" data-correct="true"  cx="260" cy="182" r="22"
+                tabindex="0" role="button" aria-pressed="false" aria-label="Spot just below Earth, near the south pole"
+                onclick="tapZone(this)" onkeydown="tapZoneKey(event, this)"/>
       </svg>
     </div>
 
@@ -2302,7 +2316,8 @@
     </div>
 
     <div class="alt-chart">
-      <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Vertical chart of Earth's atmosphere from the ground to 300 kilometers and up. Red glows at 200 kilometers and above, green in the middle around 100 to 150 kilometers, and blue and purple near the bottom around 80 to 120 kilometers.">
         <defs>
           <linearGradient id="altGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%"   stop-color="#ff503c" stop-opacity=".5"/>
@@ -2381,7 +2396,8 @@
     </div>
 
     <div class="energy-chart" style="margin-top:14px;">
-      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="Diagram of three particles entering the atmosphere with different energies. The low-energy particle stops highest, around 250 kilometers, glowing red. The medium-energy particle stops around 130 kilometers, glowing green. The high-energy particle punches deepest, to about 90 kilometers, glowing blue and purple.">
         <defs>
           <linearGradient id="altGradFaint" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%"   stop-color="#ff503c" stop-opacity=".22"/>
@@ -2551,7 +2567,8 @@
 
     <div class="kp-oval-compare">
       <div class="kp-oval-panel">
-        <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-label="Map at Kp 3: the auroral oval stays confined to the far north, covering Tromsø and Iceland but well short of Glasgow and Detroit.">
           <rect width="180" height="120" fill="#04041a" rx="4"/>
           <ellipse cx="90" cy="2" rx="66" ry="54" fill="rgba(80,255,140,.05)" stroke="rgba(80,255,140,.55)" stroke-width="1.5" stroke-dasharray="5,3"/>
           <circle cx="100" cy="36" r="3" fill="rgba(255,255,255,.85)"/>
@@ -2566,7 +2583,8 @@
         <div class="kp-oval-label">Kp 3 — <span>oval stays north</span></div>
       </div>
       <div class="kp-oval-panel">
-        <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-label="Map at Kp 7: the auroral oval has expanded south far enough to reach Glasgow and Detroit.">
           <rect width="180" height="120" fill="#04041a" rx="4"/>
           <ellipse cx="90" cy="2" rx="66" ry="86" fill="rgba(80,255,140,.05)" stroke="rgba(80,255,140,.55)" stroke-width="1.5" stroke-dasharray="5,3"/>
           <circle cx="100" cy="36" r="3" fill="rgba(255,255,255,.85)"/>
@@ -2613,7 +2631,7 @@
     <p class="mag-subtitle">Local magnetometer &nbsp;·&nbsp; <span class="info-term" tabindex="0">H-component<span class="info-tip">The horizontal strength of Earth's magnetic field at a location. A sudden swing signals that a substorm is underway nearby.</span></span></p>
 
     <div class="mag-canvas-wrap">
-      <canvas id="mag-canvas"></canvas>
+      <canvas id="mag-canvas" role="img" aria-label="Animated line chart of a magnetometer's H-component reading. The trace fluctuates gently, then suddenly spikes upward — the moment a substorm breaks out."></canvas>
     </div>
 
     <div id="substorm-label">Substorm breakout<span class="door-aka">— a.k.a. "the door is open."</span></div>
@@ -3741,16 +3759,27 @@
   });
 
   // ──────────────────────────────────────────────
-  // PART 2 — SCENE 14: TAP-THE-MAGNETOSPHERE
+  // PART 2 — SCENE 13: TAP-THE-MAGNETOSPHERE
   // ──────────────────────────────────────────────
   const TAP_TOTAL_CORRECT = 2;
   let tapFoundCount = 0;
 
   function initTap() {
     tapFoundCount = 0;
-    document.querySelectorAll('#scene-14 .tap-zone').forEach(z => z.classList.remove('found', 'wrong'));
+    document.querySelectorAll('#scene-13 .tap-zone').forEach(z => {
+      z.classList.remove('found', 'wrong');
+      z.setAttribute('aria-pressed', 'false');
+    });
     el('tap-complete').classList.remove('visible');
     el('tap-progress').textContent = '0 of ' + TAP_TOTAL_CORRECT + ' found';
+  }
+
+  function tapZoneKey(e, zone) {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      tapZone(zone);
+    }
   }
 
   function tapZone(zone) {
@@ -3759,6 +3788,8 @@
 
     if (correct) {
       zone.classList.add('found');
+      zone.setAttribute('aria-pressed', 'true');
+      zone.setAttribute('aria-label', zone.getAttribute('aria-label') + ' — found');
       tapFoundCount++;
       el('tap-progress').textContent = tapFoundCount + ' of ' + TAP_TOTAL_CORRECT + ' found';
       if (tapFoundCount >= TAP_TOTAL_CORRECT) {
