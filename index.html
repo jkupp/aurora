@@ -625,6 +625,8 @@
       align-items: center; gap: 22px;
       padding: 0 20px;
       width: 100%; max-width: 860px;
+      max-height: calc(90dvh - 40px);
+      overflow-y: auto;
       animation: scene-fadein .9s ease .2s both;
     }
 
@@ -739,9 +741,9 @@
       transition: opacity .7s ease, transform .7s ease;
     }
     .ts-word.show { opacity: 1; transform: translateY(0); }
-    .ts-word.c-days  { color: rgba(255,190,60,.95); }
-    .ts-word.c-hours { color: rgba(0,220,210,.95);  }
-    .ts-word.c-mins  { color: rgba(80,255,140,.95); }
+    .ts-word.c-days  { color: var(--text-secondary); }
+    .ts-word.c-hours { color: var(--text-secondary); }
+    .ts-word.c-mins  { color: var(--text-secondary); }
     .ts-arrow {
       font-size: 1.05rem; color: rgba(255,255,255,.3);
       opacity: 0; transition: opacity .7s ease;
@@ -756,6 +758,8 @@
       position: relative; z-index: 2;
       max-width: 840px; width: 100%;
       padding: 0 44px;
+      max-height: calc(90dvh - 40px);
+      overflow-y: auto;
       animation: scene-fadein .9s ease .2s both;
     }
     .ts-badge {
@@ -1484,6 +1488,8 @@
       position: relative; z-index: 2;
       max-width: 920px; width: 100%;
       padding: 0 40px; text-align: center;
+      max-height: calc(90dvh - 40px);
+      overflow-y: auto;
       animation: scene-fadein .9s ease .15s both;
     }
 
@@ -1552,6 +1558,8 @@
       position: relative; z-index: 2;
       max-width: 760px; width: 100%;
       padding: 0 40px; text-align: center;
+      max-height: calc(90dvh - 40px);
+      overflow-y: auto;
       animation: scene-fadein .9s ease .2s both;
     }
     .credits-intro {
@@ -1590,6 +1598,17 @@
       border-top: 1px solid rgba(255,255,255,.1);
     }
 
+    .btn-start-over {
+      display: block; margin: 28px auto 0;
+      font-family: 'Cinzel', serif;
+      font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--text-secondary); background: none;
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 10px 26px; border-radius: 4px; cursor: pointer;
+      transition: color var(--t-fast), border-color var(--t-fast);
+    }
+    .btn-start-over:hover { color: var(--text-bright); border-color: rgba(255,255,255,.45); }
+
     /* ================================================================
        KEYFRAME UTILITIES
     ================================================================ */
@@ -1601,6 +1620,38 @@
     @keyframes reveal-up {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    @keyframes hint-bob {
+      0%, 100% { transform: translateX(-50%) translateY(0);   opacity: .45; }
+      50%       { transform: translateX(-50%) translateY(5px); opacity: .8; }
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 72px; /* clear the nav bar */
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Inter', sans-serif;
+      font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      pointer-events: none;
+      z-index: 30;
+      animation: hint-bob 1.6s ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    /* ================================================================
+       SHORT / LANDSCAPE VIEWPORT — tighten spacing, cap chart heights
+    ================================================================ */
+    @media (max-height: 580px) {
+      .ts-badge { margin-bottom: 8px; }
+      .ts-title { margin-bottom: 6px; }
+      .ts-body p { margin-bottom: 8px; }
+      .alt-chart svg,
+      .energy-chart svg { max-height: 30vh; }
+      #oval-map { max-height: 38vh; }
+      .oval-wrap { gap: 10px; }
+      .ts-callout { margin-top: 10px; padding: 10px 14px; }
     }
 
   </style>
@@ -2308,9 +2359,9 @@
     <div class="ts-body">
       <p>The aurora isn't one flat curtain — it's light coming from a range of heights above the ground, and the
       height decides the color. Near the top of that range, <strong>200 km and up</strong>, the air is so thin
-      that oxygen glows <strong>red</strong>. In the middle, around <strong>100–150 km</strong>, oxygen glows
+      that <span class="info-term" tabindex="0">oxygen<span class="info-tip">Like a neon sign, each gas emits light at specific wavelengths when energized electrons snap back to their resting state. Oxygen has two such transitions: a slow red one that only completes when collisions are rare (high altitude), and a faster green one that dominates lower down where the air is denser.</span></span> glows <strong>red</strong>. In the middle, around <strong>100–150 km</strong>, oxygen glows
       the brighter, more familiar <strong>green</strong>. Near the bottom, <strong>80–120 km</strong>, the air
-      is dense enough to be mostly nitrogen, which glows <strong>blue and purple</strong>.</p>
+      is dense enough to be mostly <span class="info-term" tabindex="0">nitrogen<span class="info-tip">Nitrogen molecules have their own set of electron transitions, producing blue and purple light. The aurora's palette is a direct readout of which gases are present at which altitude — each element's unique emission fingerprint, written across the sky.</span></span>, which glows <strong>blue and purple</strong>.</p>
       <p>For reference, a commercial jet cruises around 10 km — the entire aurora happens far above that,
       at the edge of space. Why does color track height so neatly? That's the next scene.</p>
     </div>
@@ -2504,7 +2555,7 @@
     <h2 class="section-headline">The Rhythm</h2>
     <p class="section-body">
       Why is the aurora so hard to predict?
-      Not one reason — three. Each operates on a completely different timescale.
+      Not one reason — three. Each operates on its own timescale: days, hours, or minutes.
     </p>
     <div class="ts-words">
       <span class="ts-word c-days">Days</span>
@@ -2639,6 +2690,8 @@
     <p class="mag-explainer">
       Energy builds in Earth's magnetotail for 1–3 hours, then releases explosively.
       The aurora suddenly brightens and dances. A spiking magnetometer is your best real-time signal.
+      Most are operated by university research networks, but many aurora tour guides now carry
+      portable ones — some share live readings with guests on the spot.
     </p>
   </div>
 </section>
@@ -2927,6 +2980,7 @@
     </div>
 
     <div class="credits-dedication">For Toko</div>
+    <button class="btn-start-over" onclick="startOver()">↩ Start Over</button>
   </div>
 </section>
 
@@ -3002,12 +3056,17 @@
 
     loadSceneAssets(n);
     onSceneLeave(cur);
-    unloadSceneAssets(cur);
     onSceneActivate(n);
 
-    setTimeout(() => { from.classList.remove('leaving'); busy = false; }, 1300);
+    const fromN = cur;
+    setTimeout(() => {
+      from.classList.remove('leaving');
+      unloadSceneAssets(fromN); // wait until leaving scene is fully invisible
+      busy = false;
+    }, 1300);
 
     cur = n;
+    try { sessionStorage.setItem('aurora-scene', n); } catch(e) {}
     refreshNav();
   }
 
@@ -3073,6 +3132,37 @@
     if (n === 25) initChase();
     if (n === 27) initFA();
     if (n === 28) animateConclusionBadges();
+
+    // Show a scroll hint on scenes whose content can overflow in short viewports.
+    const scrollSelectors = {
+      12: '.oval-wrap', 16: '.ts-scene', 17: '.ts-scene',
+      20: '.ts-scene', 21: '.ts-scene', 22: '.mag-scene',
+      28: '.conclusion-scene', 29: '.credits-scene'
+    };
+    if (scrollSelectors[n]) {
+      const sceneEl = el('scene-' + n);
+      const container = sceneEl.querySelector(scrollSelectors[n]);
+      if (container) setTimeout(() => attachScrollHint(sceneEl, container), 400);
+    }
+  }
+
+  function attachScrollHint(sceneEl, container) {
+    const existing = sceneEl.querySelector('.scroll-hint');
+    if (existing) existing.remove();
+    if (container.scrollHeight <= container.clientHeight + 12) return;
+
+    const hint = document.createElement('div');
+    hint.className = 'scroll-hint';
+    hint.textContent = '↓ scroll';
+    sceneEl.appendChild(hint);
+
+    function onScroll() {
+      if (container.scrollTop + container.clientHeight >= container.scrollHeight - 16) {
+        hint.remove();
+        container.removeEventListener('scroll', onScroll);
+      }
+    }
+    container.addEventListener('scroll', onScroll);
   }
 
   // Releases video decode buffers once a scene is no longer the one showing,
@@ -3364,7 +3454,7 @@
   const FA_SCENARIOS = [
     {
       location: 'Tromsø, Norway',
-      subtitle: 'A large CME left the Sun two days ago, right on schedule.',
+      subtitle: 'A large CME (coronal mass ejection) left the Sun two days ago, right on schedule.',
       briefing: [
         { label: 'CME', value: 'Large, fast (~1500 km/s)' },
         { label: 'Expected arrival', value: 'Tonight' },
@@ -4008,6 +4098,27 @@
   // ──────────────────────────────────────────────
   // INIT
   // ──────────────────────────────────────────────
+
+  // Restore the last scene from this browser session (survives forward/back nav).
+  // Deliberately no animation — feels like a restore, not a transition.
+  (function restoreScene() {
+    try {
+      const saved = parseInt(sessionStorage.getItem('aurora-scene'), 10);
+      if (saved > 0 && saved < TOTAL) {
+        el('scene-0').classList.remove('active');
+        el('scene-' + saved).classList.add('active');
+        loadSceneAssets(saved);
+        onSceneActivate(saved);
+        cur = saved;
+      }
+    } catch(e) {}
+  })();
+
+  function startOver() {
+    try { sessionStorage.removeItem('aurora-scene'); } catch(e) {}
+    goTo(0);
+  }
+
   refreshNav();
 </script>
 
